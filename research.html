@@ -2,51 +2,46 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Research by Joey Woo: cohesive ∞-topoi, quantum modalities, and category-theoretic approaches to quantum foundations." />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Research by Joey Woo: constructive models of cohesion and quantum modalities." />
   <title>Research · Joey Woo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <link rel="canonical" href="https://s202101185-cell.github.io/research.html">
 </head>
 <body>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="research.html">Research</a>
-    <a href="publications.html">Publications</a>
-    <a href="about.html">About</a>
-    <a href="contact.html">Contact</a>
-  </nav>
-
-  <header class="hero">
-    <div class="hero-content fade-in">
-      <div class="hero-text">
-        <h1>Research</h1>
-        <p>A guided tour through the ideas, from the big picture to technical constructions.</p>
-      </div>
+  <header class="site-header" role="banner">
+    <div class="header-inner container">
+      <a class="brand" href="index.html"><svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="24" cy="24" r="22"/></g></svg><span class="brand-name">Joey Woo</span></a>
+      <nav class="nav" role="navigation"><a href="index.html">Home</a><a href="research.html">Research</a><a href="publications.html">Publications</a><a href="about.html">About</a><a href="contact.html" class="cta">Contact</a></nav>
+      <div class="header-actions"><button id="theme-toggle" class="icon-btn" aria-label="Toggle theme">◐</button></div>
     </div>
   </header>
 
-  <main class="container fade-in">
-    <section class="card" data-enhance="true" data-model="research-timeline">
-      <h2>Cohesive ∞‑Topoi & Quantum Modalities</h2>
-      <p>
-        Schreiber's programme proposes a synthetic setting for quantum and classical notions inside cohesive
-        higher topos theory. I provide explicit, finite‑dimensional models using C*-algebras, study monoidal
-        comonads which implement quantum modalities, and explore obstructions to precomposition and coreflection.
-      </p>
-    </section>
+  <main>
+    <section class="container" aria-labelledby="research-heading">
+      <h1 id="research-heading">Research</h1>
+      <p class="lede">My work gives explicit constructions that illustrate the interaction between cohesion and quantum modalities and investigates structural obstructions and possible resolutions.</p>
 
-    <section class="card" data-enhance="true">
-      <h2>Current Directions</h2>
-      <ul>
-        <li>Resolutions of the precomposition obstruction via mixed distributive laws.</li>
-        <li>Connections between quantum modalities and compositional learning models.</li>
-        <li>Concrete constructions to support computation and visualization of modalities.</li>
-      </ul>
+      <article class="card" data-enhance="true" data-model="research-timeline">
+        <h2>Core themes</h2>
+        <ul>
+          <li>Concrete models of cohesive ∞‑topoi using finite-dimensional algebras.</li>
+          <li>Monoidal comonads and quantum modalities: structure and degeneracy.</li>
+          <li>Obstruction theorems and constructive pathways to resolution.</li>
+        </ul>
+        <p><button class="btn outline model-btn" data-model="research-timeline">Open timeline model</button></p>
+      </article>
+
+      <article class="card" data-enhance="true">
+        <h2>Approach</h2>
+        <p>The emphasis is on explicit examples and categorical clarity — to make abstract ideas usable in computation and clear in semantics.</p>
+      </article>
     </section>
   </main>
 
-  <footer>
-    <p>© 2026 Joey Woo · <a href="mailto:s202101185@student.cky.edu.hk">Email</a></p>
+  <footer class="site-footer">
+    <div class="container footer-inner"><p class="small muted">© 2026 Joey Woo</p><p class="small muted">Careful proofs, fewer shortcuts.</p></div>
   </footer>
 
   <script src="assets/js/ai-personalizer-full.js" defer></script>
