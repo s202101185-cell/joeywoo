@@ -8,19 +8,58 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --bg-soft: #f8fafc;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.03);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.05);
+            --dark-bg: #0f172a;
+            --dark-text: #e2e8f0;
+        }
+        * { box-sizing: border-box; margin:0; padding:0; }
+        body {
+            font-family: 'EB Garamond', serif;
+            background: #f9fafb;
+            color: #1e1e1e;
+            transition: background 0.4s, color 0.4s;
+            -webkit-font-smoothing: antialiased;
+        }
+        body.dark-mode {
+            background: var(--dark-bg);
+            color: var(--dark-text);
+        }
+        body.dark-mode .viz-container {
+            background: #1e293b;
+            border-color: #334155;
+        }
+        body.dark-mode .viz-tab {
+            background: #334155;
+            border-color: #475569;
+            color: #cbd5e1;
+        }
+        body.dark-mode .viz-tab.active {
+            background: var(--accent);
+            color: #fff;
+        }
         .viz-container {
             position: relative;
             width: 100%;
-            height: 500px;
+            height: 480px;
             margin: 1.5rem 0;
-            border: 1px solid var(--muted-light, #e2e8f0);
-            border-radius: 10px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
             overflow: hidden;
-            background: #fcfcfc;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+            background: var(--card-bg);
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow 0.2s, background 0.4s, border-color 0.4s;
+            will-change: transform;
         }
-        .viz-row { display: flex; gap: 1rem; flex-wrap: wrap; }
-        .viz-col { flex: 1; min-width: 280px; }
+        .viz-container:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+        .viz-row { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+        .viz-col { flex: 1; min-width: 300px; }
         .viz-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
         .viz-tab {
             padding: 0.5rem 1.2rem;
@@ -30,26 +69,27 @@
             cursor: pointer;
             font-family: 'Inter', sans-serif;
             font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
             transition: all 0.2s;
+            user-select: none;
         }
-        .viz-tab.active {
-            background: var(--accent, #2563eb);
-            color: #fff;
-            border-color: var(--accent, #2563eb);
+        .viz-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+        canvas { display: block; width: 100%; height: 100%; }
+        .explain-collapse { margin: 0.8rem 0; }
+        .explain-collapse summary {
+            font-weight: 600; cursor: pointer; outline: none;
+            transition: color 0.2s;
         }
-        canvas { display: block; }
-        .explain-collapse { margin: 1rem 0; }
-        .explain-collapse summary { font-weight: 600; cursor: pointer; }
+        .explain-collapse summary:hover { color: var(--accent); }
 
         /* Diamond button */
         .diamond-btn {
             position: absolute;
-            bottom: 16px;
-            left: 16px;
+            bottom: 16px; left: 16px;
             z-index: 10;
-            width: 44px;
-            height: 44px;
-            background: var(--accent, #2563eb);
+            width: 40px; height: 40px;
+            background: var(--accent);
             color: #fff;
             border: none;
             border-radius: 4px;
@@ -59,31 +99,115 @@
             align-items: center;
             justify-content: center;
             font-size: 1.2rem;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            transition: background 0.2s, transform 0.3s, box-shadow 0.2s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+            transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+            outline: none;
         }
-        .diamond-btn span {
-            display: block;
-            transform: rotate(-45deg);
-            font-weight: bold;
+        .diamond-btn span { display: block; transform: rotate(-45deg); font-weight: bold; }
+        .diamond-btn:hover { background: var(--accent-hover); box-shadow: 0 6px 12px rgba(0,0,0,0.12); }
+        .diamond-btn.applied { background: #dc2626; }
+
+        /* Ripple ring */
+        .ripple-ring {
+            position: absolute;
+            bottom: 16px; left: 16px;
+            width: 0; height: 0;
+            border-radius: 50%;
+            background: transparent;
+            border: 2px solid var(--accent);
+            pointer-events: none;
+            z-index: 8;
+            opacity: 0;
         }
-        .diamond-btn:hover {
-            background: #1d4ed8;
-            box-shadow: 0 6px 14px rgba(0,0,0,0.15);
-            transform: rotate(45deg) scale(1.05);
+
+        /* custom range slider */
+        input[type=range].custom-slider {
+            -webkit-appearance: none; appearance: none;
+            width: 120px; height: 4px;
+            background: #cbd5e1; border-radius: 2px; outline: none;
+            position: absolute; bottom: 20px; left: 20px; z-index: 5;
         }
-        .diamond-btn.applied {
-            background: #dc2626;
+        input[type=range].custom-slider::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none;
+            width: 14px; height: 14px; border-radius: 50%;
+            background: var(--accent); cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            transition: transform 0.15s;
         }
+        input[type=range].custom-slider::-webkit-slider-thumb:hover { transform: scale(1.1); }
+
+        /* Tooltip */
+        .viz-tooltip {
+            position: absolute;
+            background: rgba(15, 23, 42, 0.9);
+            color: #f1f5f9;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.15s;
+            z-index: 20;
+            white-space: nowrap;
+        }
+        .viz-tooltip.visible { opacity: 1; }
+
+        /* Sketch controls */
+        .sketch-controls {
+            position: absolute; bottom: 16px; right: 16px; z-index: 11;
+            display: flex; gap: 8px;
+        }
+        .sketch-btn {
+            background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 6px;
+            padding: 4px 10px; font-family: 'Inter', sans-serif; font-size: 0.75rem;
+            cursor: pointer; transition: background 0.2s;
+        }
+        .sketch-btn:hover { background: #e2e8f0; }
+
+        /* Overlay nodes for 2D diagram */
+        .overlay-node {
+            position: absolute;
+            background: #2563eb;
+            color: #fff;
+            border-radius: 50%;
+            width: 26px; height: 26px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; font-size: 0.8rem;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 15;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        /* Dark mode toggle */
+        .dark-mode-toggle {
+            position: fixed;
+            bottom: 20px; right: 20px;
+            z-index: 1000;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 40px; height: 40px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-size: 1.2rem;
+            transition: transform 0.2s, background 0.2s;
+        }
+        .dark-mode-toggle:hover { transform: scale(1.05); }
+
+        /* Panel crossfade */
+        .panel-container {
+            transition: opacity 0.35s ease;
+        }
+        .panel-container.fading { opacity: 0; }
     </style>
-    <!-- MathJax for beautiful equations -->
+    <!-- MathJax -->
     <script>
         MathJax = {
-            tex: {
-                inlineMath: [['\\(', '\\)']],
-                displayMath: [['\\[', '\\]']],
-                processEscapes: true
-            }
+            tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']], processEscapes: true }
         };
     </script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
@@ -109,14 +233,14 @@
 
     <main class="container fade-in">
         <div class="viz-tabs" id="dim-tabs">
-            <button class="viz-tab active" data-dim="1d">1D</button>
-            <button class="viz-tab" data-dim="2d">2D</button>
-            <button class="viz-tab" data-dim="3d">3D</button>
-            <button class="viz-tab" data-dim="4d">4D</button>
+            <button class="viz-tab active" data-dim="1d">1D · Spectrum</button>
+            <button class="viz-tab" data-dim="2d">2D · Obstruction</button>
+            <button class="viz-tab" data-dim="3d">3D · Quantum Site</button>
+            <button class="viz-tab" data-dim="4d">4D · Tesseract</button>
         </div>
 
-        <!-- 1D -->
-        <div id="panel-1d">
+        <!-- 1D panels -->
+        <div class="panel-container" id="panel-1d">
             <div class="viz-row">
                 <div class="viz-col">
                     <div class="viz-container" id="viz-1d-a"></div>
@@ -126,7 +250,7 @@
                     </details>
                     <details class="explain-collapse">
                         <summary>Mathematical description</summary>
-                        <p>The line represents the Gelfand spectrum of a commutative \(C^*\)-algebra. Under the centre comonad \(Q^\diamond\), the representable sheaf \(\mathbf{y}_{M_2}\) becomes empty; only commutative algebras survive. This interactive model shows that collapse: all points coalesce into the unique trivial character.</p>
+                        <p>The line represents the Gelfand spectrum of a commutative \(C^*\)-algebra. Under \(Q^\diamond\), the representable sheaf \(\mathbf{y}_{M_2}\) becomes empty; only commutative algebras survive. This interactive model shows that collapse: all points coalesce into the unique trivial character.</p>
                     </details>
                 </div>
                 <div class="viz-col">
@@ -143,14 +267,14 @@
             </div>
         </div>
 
-        <!-- 2D -->
-        <div id="panel-2d" style="display:none;">
+        <!-- 2D panels -->
+        <div class="panel-container" id="panel-2d" style="display:none;">
             <div class="viz-row">
                 <div class="viz-col">
                     <div class="viz-container" id="viz-2d-a"></div>
                     <details class="explain-collapse">
                         <summary>What this shows (plain English)</summary>
-                        <p>Pinch‑zoom and drag the diagram. Click the diamond to see how the obstruction flattens when the classical core is cartesian.</p>
+                        <p>Pinch‑zoom and drag the diagram. Click the diamond to see the obstruction flatten when the classical core is cartesian.</p>
                     </details>
                     <details class="explain-collapse">
                         <summary>Mathematical description</summary>
@@ -161,7 +285,7 @@
                     <div class="viz-container" id="viz-2d-b"></div>
                     <details class="explain-collapse">
                         <summary>What this shows (plain English)</summary>
-                        <p>A free‑sketch canvas: draw your own diagram and explore how the obstruction changes.</p>
+                        <p>A free‑sketch canvas: draw your own diagram and explore how the obstruction changes. Use mouse or touch to draw. Clear with double‑click.</p>
                     </details>
                     <details class="explain-collapse">
                         <summary>Mathematical description</summary>
@@ -171,8 +295,8 @@
             </div>
         </div>
 
-        <!-- 3D -->
-        <div id="panel-3d" style="display:none;">
+        <!-- 3D panels -->
+        <div class="panel-container" id="panel-3d" style="display:none;">
             <div class="viz-row">
                 <div class="viz-col">
                     <div class="viz-container" id="viz-3d-a"></div>
@@ -199,8 +323,8 @@
             </div>
         </div>
 
-        <!-- 4D -->
-        <div id="panel-4d" style="display:none;">
+        <!-- 4D panels -->
+        <div class="panel-container" id="panel-4d" style="display:none;">
             <div class="viz-row">
                 <div class="viz-col">
                     <div class="viz-container" id="viz-4d-a"></div>
@@ -235,13 +359,42 @@
         </p>
     </footer>
 
-    <!-- Three.js and OrbitControls -->
+    <button class="dark-mode-toggle" id="darkToggle" aria-label="Toggle dark mode">🌓</button>
+
+    <!-- Three.js & OrbitControls -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.126.0/build/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.126.0/examples/js/controls/OrbitControls.js"></script>
     <script src="assets/js/ai-enhancer.js" defer></script>
 
     <script>
     (function() {
+        // ---- High-DPI canvas helper ----
+        function setupHiDPI(canvas, ctx) {
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            canvas.style.width = rect.width + 'px';
+            canvas.style.height = rect.height + 'px';
+            ctx.setTransform(1,0,0,1,0,0); // reset transform
+            ctx.scale(dpr, dpr);
+            return { width: rect.width, height: rect.height, dpr };
+        }
+
+        // ---- Dark mode ----
+        const darkToggle = document.getElementById('darkToggle');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (localStorage.getItem('darkMode') === 'true' || (!localStorage.getItem('darkMode') && prefersDark)) {
+            document.body.classList.add('dark-mode');
+            darkToggle.textContent = '☀️';
+        }
+        darkToggle.addEventListener('click', () => {
+            const isDark = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', isDark);
+            darkToggle.textContent = isDark ? '☀️' : '🌓';
+        });
+
+        // ---- Tab switching with crossfade ----
         const dimTabs = document.querySelectorAll('#dim-tabs .viz-tab');
         const panels = {
             '1d': document.getElementById('panel-1d'),
@@ -251,77 +404,128 @@
         };
         let activeDim = '1d';
         let threeJSCleanups = [];
+        let isSwitching = false;
 
         function switchDim(dim) {
-            if (dim === activeDim) return;
-            panels[activeDim].style.display = 'none';
-            panels[dim].style.display = 'block';
-            threeJSCleanups.forEach(fn => fn());
-            threeJSCleanups = [];
-            dimTabs.forEach(t => t.classList.remove('active'));
-            document.querySelector(`#dim-tabs .viz-tab[data-dim="${dim}"]`).classList.add('active');
-            activeDim = dim;
-            switch(dim) {
-                case '1d': setTimeout(init1D, 50); break;
-                case '2d': setTimeout(init2D, 50); break;
-                case '3d': setTimeout(init3D, 50); break;
-                case '4d': setTimeout(init4D, 50); break;
-            }
+            if (dim === activeDim || isSwitching) return;
+            isSwitching = true;
+            const oldPanel = panels[activeDim];
+            const newPanel = panels[dim];
+
+            // Fade out old
+            oldPanel.classList.add('fading');
+            setTimeout(() => {
+                oldPanel.style.display = 'none';
+                oldPanel.classList.remove('fading');
+
+                // Fade in new
+                newPanel.style.display = 'block';
+                newPanel.classList.add('fading');
+                requestAnimationFrame(() => {
+                    newPanel.classList.remove('fading');
+                });
+
+                threeJSCleanups.forEach(fn => fn());
+                threeJSCleanups = [];
+                dimTabs.forEach(t => t.classList.remove('active'));
+                document.querySelector(`#dim-tabs .viz-tab[data-dim="${dim}"]`).classList.add('active');
+                activeDim = dim;
+
+                requestAnimationFrame(() => {
+                    switch(dim) {
+                        case '1d': init1D(); break;
+                        case '2d': init2D(); break;
+                        case '3d': init3D(); break;
+                        case '4d': init4D(); break;
+                    }
+                    isSwitching = false;
+                });
+            }, 200);
         }
         dimTabs.forEach(tab => tab.addEventListener('click', () => switchDim(tab.dataset.dim)));
 
-        // Helper to create a diamond button
-        function createDiamondBtn(parent, label, onClick) {
+        // Keyboard shortcuts
+        document.addEventListener('keydown', e => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
+            const dim = { '1':'1d', '2':'2d', '3':'3d', '4':'4d' }[e.key];
+            if (dim) switchDim(dim);
+        });
+
+        // Diamond button helper
+        function createDiamondBtn(parent, onClick) {
             const btn = document.createElement('button');
             btn.className = 'diamond-btn';
             const span = document.createElement('span');
-            span.textContent = label;
+            span.textContent = '◆';
             btn.appendChild(span);
             btn.addEventListener('click', onClick);
             parent.appendChild(btn);
             return btn;
         }
 
-        // ----- 1D – refined with animation and tooltips -----
+        // ---- Ripple effect helper ----
+        function triggerRipple(container, x, y) {
+            const ripple = document.createElement('div');
+            ripple.className = 'ripple-ring';
+            ripple.style.left = x + 'px';
+            ripple.style.bottom = y + 'px';
+            container.appendChild(ripple);
+            requestAnimationFrame(() => {
+                ripple.style.width = ripple.style.height = '60px';
+                ripple.style.left = (x - 30) + 'px';
+                ripple.style.bottom = (y - 30) + 'px';
+                ripple.style.opacity = '0';
+            });
+            ripple.addEventListener('transitionend', () => ripple.remove());
+        }
+
+        // ========== 1D (spring physics, high-DPI, ripple) ==========
         function init1D() {
             function initSpectrum(containerId, type) {
                 const container = document.getElementById(containerId);
                 container.innerHTML = '';
                 const canvas = document.createElement('canvas');
-                canvas.style.width = '100%'; canvas.style.height = '100%';
                 container.appendChild(canvas);
                 const ctx = canvas.getContext('2d');
+                const tooltip = document.createElement('div');
+                tooltip.className = 'viz-tooltip';
+                container.appendChild(tooltip);
+
                 let w, h;
                 const resize = () => {
-                    w = container.clientWidth; h = container.clientHeight;
-                    canvas.width = w; canvas.height = h; draw();
+                    const dims = setupHiDPI(canvas, ctx);
+                    w = dims.width; h = dims.height;
+                    draw();
                 };
                 window.addEventListener('resize', resize);
                 resize();
 
                 let points = [];
-                let animFrame;
+                let animFrame = null;
+                const spring = { stiffness: 0.025, damping: 0.82 };
+
                 if (type === 'collapse') {
                     const numPts = 7;
-                    for (let i=0; i<numPts; i++) {
-                        const baseX = w * (0.1 + 0.12*i);
-                        points.push({ baseX, x: baseX, targetX: baseX, collapsed: false });
+                    for (let i = 0; i < numPts; i++) {
+                        const baseX = w * (0.1 + 0.12 * i);
+                        points.push({ baseX, x: baseX, vx: 0, targetX: baseX, collapsed: false, label: `p${i}` });
                     }
-                    createDiamondBtn(container, '◆', () => {
+                    const btn = createDiamondBtn(container, () => {
                         points.forEach(p => { p.collapsed = !p.collapsed; p.targetX = p.collapsed ? w/2 : p.baseX; });
                         if (!animFrame) animate();
+                        triggerRipple(container, 16, 16);
                     });
                 } else {
                     const slider = document.createElement('input');
-                    slider.type = 'range'; slider.min = 0; slider.max = 1; slider.step = 0.01; slider.value = 0.5;
-                    slider.style.position = 'absolute'; slider.style.bottom = '16px'; slider.style.left = '16px'; slider.style.width = '120px';
+                    slider.type = 'range'; slider.className = 'custom-slider';
+                    slider.min = 0; slider.max = 1; slider.step = 0.01; slider.value = 0.5;
                     container.appendChild(slider);
                     const update = () => {
                         const s = parseFloat(slider.value);
                         points = [];
-                        for (let i=0; i<9; i++) {
-                            const baseX = w * (0.1 + 0.1*i);
-                            points.push({ baseX, x: baseX + (w/2 - baseX)*s, targetX: baseX + (w/2 - baseX)*s });
+                        for (let i = 0; i < 9; i++) {
+                            const baseX = w * (0.1 + 0.1 * i);
+                            points.push({ baseX, x: baseX, vx: 0, targetX: baseX + (w/2 - baseX) * s, label: i });
                         }
                         draw();
                     };
@@ -330,95 +534,139 @@
                 }
 
                 function animate() {
-                    let allDone = true;
+                    let allSettled = true;
                     points.forEach(p => {
-                        const dx = p.targetX - p.x;
-                        if (Math.abs(dx) > 0.5) { p.x += dx*0.1; allDone = false; }
+                        const force = (p.targetX - p.x) * spring.stiffness;
+                        p.vx = (p.vx + force) * spring.damping;
+                        p.x += p.vx;
+                        if (Math.abs(p.vx) > 0.08 || Math.abs(p.targetX - p.x) > 0.3) allSettled = false;
                         else p.x = p.targetX;
                     });
                     draw();
-                    if (!allDone) animFrame = requestAnimationFrame(animate);
+                    if (!allSettled) animFrame = requestAnimationFrame(animate);
                     else animFrame = null;
                 }
 
                 let draggingIdx = -1;
                 function hitTest(mx, my) {
-                    for (let i=0; i<points.length; i++) {
+                    for (let i = 0; i < points.length; i++) {
                         const dx = mx - points[i].x, dy = my - h/2;
-                        if (Math.sqrt(dx*dx+dy*dy) < 15) return i;
+                        if (Math.sqrt(dx*dx + dy*dy) < 16) return i;
                     }
                     return -1;
                 }
+
                 canvas.addEventListener('mousedown', e => {
                     const rect = canvas.getBoundingClientRect();
-                    const idx = hitTest(e.clientX-rect.left, e.clientY-rect.top);
-                    if (idx >= 0) { draggingIdx = idx; points[idx].targetX = points[idx].x; }
+                    const mx = (e.clientX - rect.left);
+                    const my = (e.clientY - rect.top);
+                    const idx = hitTest(mx, my);
+                    if (idx >= 0) { draggingIdx = idx; points[idx].targetX = points[idx].x; points[idx].vx = 0; }
                 });
                 canvas.addEventListener('mousemove', e => {
-                    if (draggingIdx < 0) return;
                     const rect = canvas.getBoundingClientRect();
-                    points[draggingIdx].x = e.clientX - rect.left;
-                    points[draggingIdx].targetX = points[draggingIdx].x;
-                    draw();
+                    const mx = (e.clientX - rect.left);
+                    const my = (e.clientY - rect.top);
+                    const idx = hitTest(mx, my);
+                    if (draggingIdx >= 0) {
+                        points[draggingIdx].x = mx;
+                        points[draggingIdx].targetX = mx;
+                        draw();
+                        tooltip.classList.remove('visible');
+                    } else if (idx >= 0) {
+                        canvas.style.cursor = 'pointer';
+                        tooltip.classList.add('visible');
+                        tooltip.style.left = (mx + 12) + 'px';
+                        tooltip.style.top = (my - 28) + 'px';
+                        tooltip.textContent = points[idx].label;
+                    } else {
+                        canvas.style.cursor = 'default';
+                        tooltip.classList.remove('visible');
+                    }
                 });
                 canvas.addEventListener('mouseup', () => { draggingIdx = -1; });
+                canvas.addEventListener('mouseleave', () => { tooltip.classList.remove('visible'); });
                 canvas.addEventListener('touchstart', e => {
                     e.preventDefault();
                     const rect = canvas.getBoundingClientRect();
-                    const idx = hitTest(e.touches[0].clientX-rect.left, e.touches[0].clientY-rect.top);
-                    if (idx >= 0) { draggingIdx = idx; points[idx].targetX = points[idx].x; }
+                    const mx = (e.touches[0].clientX - rect.left);
+                    const my = (e.touches[0].clientY - rect.top);
+                    const idx = hitTest(mx, my);
+                    if (idx >= 0) { draggingIdx = idx; points[idx].targetX = points[idx].x; points[idx].vx = 0; }
                 });
                 canvas.addEventListener('touchmove', e => {
                     e.preventDefault();
                     if (draggingIdx < 0) return;
                     const rect = canvas.getBoundingClientRect();
-                    points[draggingIdx].x = e.touches[0].clientX - rect.left;
+                    points[draggingIdx].x = (e.touches[0].clientX - rect.left);
                     points[draggingIdx].targetX = points[draggingIdx].x;
                     draw();
                 });
                 canvas.addEventListener('touchend', () => { draggingIdx = -1; });
 
                 function draw() {
-                    ctx.clearRect(0,0,w,h);
-                    const grad = ctx.createLinearGradient(0,0,0,h);
-                    grad.addColorStop(0, '#fafbfc'); grad.addColorStop(1, '#e2e8f0');
-                    ctx.fillStyle = grad; ctx.fillRect(0,0,w,h);
+                    const isDark = document.body.classList.contains('dark-mode');
+                    ctx.clearRect(0, 0, w, h);
+                    ctx.fillStyle = isDark ? '#1e293b' : '#f9fafb';
+                    ctx.fillRect(0, 0, w, h);
+                    ctx.strokeStyle = isDark ? '#334155' : '#e2e8f0';
+                    ctx.lineWidth = 0.5;
+                    for (let x = 0; x < w; x += 30) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
+                    for (let y = 0; y < h; y += 30) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+
                     ctx.beginPath();
-                    ctx.moveTo(50, h/2); ctx.lineTo(w-50, h/2);
-                    ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 1.5; ctx.stroke();
+                    ctx.moveTo(40, h/2); ctx.lineTo(w - 40, h/2);
+                    ctx.strokeStyle = isDark ? '#475569' : '#94a3b8';
+                    ctx.lineWidth = 1.5; ctx.stroke();
+
                     points.forEach(p => {
                         ctx.beginPath();
-                        ctx.arc(p.x, h/2, 7, 0, 2*Math.PI);
-                        const g = ctx.createRadialGradient(p.x, h/2, 2, p.x, h/2, 8);
-                        g.addColorStop(0, '#93c5fd'); g.addColorStop(1, '#1e40af');
-                        ctx.fillStyle = g; ctx.fill();
-                        ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+                        ctx.arc(p.x, h/2, 7, 0, 2 * Math.PI);
+                        const grad = ctx.createRadialGradient(p.x, h/2, 2, p.x, h/2, 8);
+                        grad.addColorStop(0, '#93c5fd'); grad.addColorStop(1, '#1e40af');
+                        ctx.fillStyle = grad; ctx.fill();
+                        ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5; ctx.stroke();
                     });
-                    ctx.fillStyle = '#334155'; ctx.font = '12px Inter'; ctx.fillText(type==='collapse'?'Spectrum collapse':'Spectrum spread', 60, 30);
+                    ctx.fillStyle = isDark ? '#cbd5e1' : '#334155';
+                    ctx.font = '12px Inter, sans-serif';
+                    ctx.fillText(type === 'collapse' ? 'Spectrum collapse' : 'Spectrum spread', 60, 30);
                 }
             }
             initSpectrum('viz-1d-a', 'collapse');
             initSpectrum('viz-1d-b', 'spread');
         }
 
-        // ----- 2D -----
+        // ========== 2D (HTML overlays, high-DPI) ==========
         function init2D() {
-            function setup2D(containerId, withToggle) {
+            function setupObstruction(containerId) {
                 const container = document.getElementById(containerId);
                 container.innerHTML = '';
                 const canvas = document.createElement('canvas');
-                canvas.style.width = '100%'; canvas.style.height = '100%';
                 container.appendChild(canvas);
                 const ctx = canvas.getContext('2d');
-                let w, h, tx=0, ty=0, scale=1;
+                let w, h, tx = 0, ty = 0, scale = 1;
                 let collapsed = false;
-                const resize = () => { w = container.clientWidth; h = container.clientHeight; canvas.width = w; canvas.height = h; draw(); };
+
+                const overlay = document.createElement('div');
+                overlay.style.position = 'absolute'; overlay.style.top = '0'; overlay.style.left = '0';
+                overlay.style.width = '100%'; overlay.style.height = '100%';
+                overlay.style.pointerEvents = 'none'; overlay.style.zIndex = '12';
+                container.appendChild(overlay);
+
+                const resize = () => {
+                    const dims = setupHiDPI(canvas, ctx);
+                    w = dims.width; h = dims.height;
+                    draw();
+                    updateOverlays();
+                };
                 window.addEventListener('resize', resize);
                 resize();
 
-                if (withToggle) {
-                    createDiamondBtn(container, '◆', () => { collapsed = !collapsed; draw(); });
-                }
+                const btn = createDiamondBtn(container, () => {
+                    collapsed = !collapsed;
+                    draw(); updateOverlays();
+                    triggerRipple(container, 16, 16);
+                });
 
                 let dragging = false, lastX, lastY;
                 canvas.addEventListener('mousedown', e => { dragging = true; lastX = e.clientX; lastY = e.clientY; });
@@ -426,7 +674,7 @@
                     if (!dragging) return;
                     tx += e.clientX - lastX; ty += e.clientY - lastY;
                     lastX = e.clientX; lastY = e.clientY;
-                    draw();
+                    draw(); updateOverlays();
                 });
                 canvas.addEventListener('mouseup', () => { dragging = false; });
                 canvas.addEventListener('wheel', e => {
@@ -434,43 +682,50 @@
                     const factor = e.deltaY < 0 ? 1.1 : 0.9;
                     const rect = canvas.getBoundingClientRect();
                     const mx = e.clientX - rect.left, my = e.clientY - rect.top;
-                    tx = mx - factor*(mx - tx);
-                    ty = my - factor*(my - ty);
+                    tx = mx - factor * (mx - tx);
+                    ty = my - factor * (my - ty);
                     scale *= factor;
-                    draw();
+                    draw(); updateOverlays();
                 });
-                canvas.addEventListener('touchstart', e => {
-                    if (e.touches.length === 1) { dragging = true; lastX = e.touches[0].clientX; lastY = e.touches[0].clientY; }
-                });
-                canvas.addEventListener('touchmove', e => {
-                    e.preventDefault();
-                    if (dragging && e.touches.length === 1) {
-                        tx += e.touches[0].clientX - lastX; ty += e.touches[0].clientY - lastY;
-                        lastX = e.touches[0].clientX; lastY = e.touches[0].clientY;
-                        draw();
-                    }
-                });
-                canvas.addEventListener('touchend', () => { dragging = false; });
+
+                function updateOverlays() {
+                    overlay.innerHTML = '';
+                    const nodes = [
+                        { x: 100, y: 100, label: 'Δ' },
+                        { x: 300, y: 100, label: collapsed ? 'X×Y' : 'Q(X×Y)' },
+                        { x: 100, y: 300, label: 'QX⊗QY' },
+                        { x: 300, y: 300, label: collapsed ? 'X×Y/Q(X×Y)' : 'X×Y' }
+                    ];
+                    nodes.forEach(n => {
+                        const screenX = n.x * scale + tx;
+                        const screenY = n.y * scale + ty;
+                        const div = document.createElement('div');
+                        div.className = 'overlay-node';
+                        div.style.left = screenX + 'px';
+                        div.style.top = screenY + 'px';
+                        div.textContent = n.label;
+                        overlay.appendChild(div);
+                    });
+                }
 
                 function draw() {
-                    ctx.clearRect(0,0,w,h);
-                    const grad = ctx.createLinearGradient(0,0,0,h);
-                    grad.addColorStop(0, '#fafbfc'); grad.addColorStop(1, '#e2e8f0');
-                    ctx.fillStyle = grad; ctx.fillRect(0,0,w,h);
+                    const isDark = document.body.classList.contains('dark-mode');
+                    ctx.clearRect(0, 0, w, h);
+                    ctx.fillStyle = isDark ? '#1e293b' : '#f9fafb';
+                    ctx.fillRect(0, 0, w, h);
+                    ctx.strokeStyle = isDark ? '#334155' : '#e2e8f0';
+                    ctx.lineWidth = 0.5;
+                    for (let x = 0; x < w; x += 30) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
+                    for (let y = 0; y < h; y += 30) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+
                     ctx.save(); ctx.translate(tx, ty); ctx.scale(scale, scale);
-                    ctx.fillStyle = '#334155'; ctx.font = '12px Inter'; ctx.fillText('Precomposition Obstruction', 20, 20);
-                    const tL = {x:100,y:100,label:'Δ'};
-                    const tR = {x:300,y:100,label: collapsed ? 'X×Y' : 'Q(X×Y)'};
-                    const bL = {x:100,y:300,label:'QX⊗QY'};
-                    const bR = {x:300,y:300,label: collapsed ? 'X×Y/Q(X×Y)' : 'X×Y'};
-                    [tL,tR,bL,bR].forEach(n => {
-                        ctx.beginPath(); ctx.arc(n.x, n.y, 9, 0, 2*Math.PI);
-                        ctx.fillStyle = '#2563eb'; ctx.fill();
-                        ctx.fillStyle = '#fff'; ctx.font = 'bold 10px Inter'; ctx.fillText(n.label, n.x-12, n.y-14);
-                    });
+                    const tL = {x:100, y:100};
+                    const tR = {x:300, y:100};
+                    const bL = {x:100, y:300};
+                    const bR = {x:300, y:300};
                     function arrow(x1,y1,x2,y2) {
                         ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
-                        ctx.strokeStyle = '#64748b'; ctx.lineWidth = 1.5; ctx.stroke();
+                        ctx.strokeStyle = '#475569'; ctx.lineWidth = 1.5; ctx.stroke();
                         const angle = Math.atan2(y2-y1, x2-x1);
                         const len = 6;
                         ctx.beginPath();
@@ -478,7 +733,7 @@
                         ctx.lineTo(x2 - len*Math.cos(angle - Math.PI/6), y2 - len*Math.sin(angle - Math.PI/6));
                         ctx.lineTo(x2 - len*Math.cos(angle + Math.PI/6), y2 - len*Math.sin(angle + Math.PI/6));
                         ctx.closePath();
-                        ctx.fillStyle = '#64748b'; ctx.fill();
+                        ctx.fillStyle = '#475569'; ctx.fill();
                     }
                     arrow(100,100, 300,100);
                     arrow(100,100, 100,300);
@@ -487,21 +742,91 @@
                     ctx.restore();
                 }
             }
-            setup2D('viz-2d-a', true);
-            setup2D('viz-2d-b', false);
+
+            function setupSketch(containerId) {
+                const container = document.getElementById(containerId);
+                container.innerHTML = '';
+                const canvas = document.createElement('canvas');
+                container.appendChild(canvas);
+                const ctx = canvas.getContext('2d');
+                let w, h;
+                let strokes = [];
+                let currentStroke = [];
+                let drawing = false;
+
+                const controlsDiv = document.createElement('div');
+                controlsDiv.className = 'sketch-controls';
+                const clearBtn = document.createElement('button'); clearBtn.className='sketch-btn'; clearBtn.textContent='Clear';
+                const undoBtn = document.createElement('button'); undoBtn.className='sketch-btn'; undoBtn.textContent='Undo';
+                controlsDiv.appendChild(clearBtn); controlsDiv.appendChild(undoBtn);
+                container.appendChild(controlsDiv);
+
+                const resize = () => {
+                    const dims = setupHiDPI(canvas, ctx);
+                    w = dims.width; h = dims.height;
+                    redrawBackground();
+                };
+                window.addEventListener('resize', resize);
+                resize();
+
+                function redrawBackground() {
+                    const isDark = document.body.classList.contains('dark-mode');
+                    ctx.fillStyle = isDark ? '#1e293b' : '#f9fafb';
+                    ctx.fillRect(0, 0, w, h);
+                    ctx.strokeStyle = isDark ? '#334155' : '#e2e8f0';
+                    ctx.lineWidth = 0.5;
+                    for (let x = 0; x < w; x += 30) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
+                    for (let y = 0; y < h; y += 30) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+                    ctx.fillStyle = isDark ? '#cbd5e1' : '#475569';
+                    ctx.font = '12px Inter, sans-serif';
+                    ctx.fillText('Sketch your own obstruction (draw with mouse/touch)', 20, 30);
+                    strokes.forEach(s => {
+                        if (!s.length) return;
+                        ctx.beginPath(); ctx.strokeStyle='#2563eb'; ctx.lineWidth=2.5;
+                        ctx.moveTo(s[0].x, s[0].y);
+                        for (let i=1; i<s.length; i++) ctx.lineTo(s[i].x, s[i].y);
+                        ctx.stroke();
+                    });
+                }
+
+                function startStroke(x,y) { drawing=true; currentStroke=[{x,y}]; strokes.push(currentStroke); }
+                function addPoint(x,y) {
+                    if (!drawing) return;
+                    const last = currentStroke[currentStroke.length-1];
+                    currentStroke.push({x,y});
+                    redrawBackground();
+                    ctx.beginPath(); ctx.strokeStyle='#2563eb'; ctx.lineWidth=2.5;
+                    ctx.moveTo(last.x,last.y); ctx.lineTo(x,y); ctx.stroke();
+                }
+                function endStroke() { drawing=false; currentStroke=[]; }
+
+                canvas.addEventListener('mousedown', e => { const r=canvas.getBoundingClientRect(); startStroke(e.clientX-r.left, e.clientY-r.top); });
+                canvas.addEventListener('mousemove', e => { if(!drawing) return; const r=canvas.getBoundingClientRect(); addPoint(e.clientX-r.left, e.clientY-r.top); });
+                canvas.addEventListener('mouseup', endStroke); canvas.addEventListener('mouseleave', endStroke);
+                canvas.addEventListener('touchstart', e => { e.preventDefault(); const r=canvas.getBoundingClientRect(); startStroke(e.touches[0].clientX-r.left, e.touches[0].clientY-r.top); });
+                canvas.addEventListener('touchmove', e => { e.preventDefault(); if(!drawing) return; const r=canvas.getBoundingClientRect(); addPoint(e.touches[0].clientX-r.left, e.touches[0].clientY-r.top); });
+                canvas.addEventListener('touchend', endStroke);
+                clearBtn.addEventListener('click', () => { strokes=[]; redrawBackground(); });
+                undoBtn.addEventListener('click', () => { if(strokes.length) strokes.pop(); redrawBackground(); });
+                redrawBackground();
+            }
+
+            setupObstruction('viz-2d-a');
+            setupSketch('viz-2d-b');
         }
 
-        // ----- 3D -----
+        // ========== 3D (animated opacity + ripple) ==========
         function init3D() {
             function createScene(containerId, type) {
                 const container = document.getElementById(containerId);
                 container.innerHTML = '';
                 const scene = new THREE.Scene();
-                scene.background = new THREE.Color('#f8fafc');
+                scene.background = new THREE.Color(document.body.classList.contains('dark-mode') ? '#1e293b' : '#f8fafc');
                 const cam = new THREE.PerspectiveCamera(45, container.clientWidth/container.clientHeight, 0.1, 100);
                 cam.position.set(5,5,8);
-                const renderer = new THREE.WebGLRenderer({antialias: true});
+                const renderer = new THREE.WebGLRenderer({antialias: true, powerPreference: 'high-performance'});
                 renderer.setSize(container.clientWidth, container.clientHeight);
+                renderer.setPixelRatio(window.devicePixelRatio);
                 container.appendChild(renderer.domElement);
                 const controls = new THREE.OrbitControls(cam, renderer.domElement);
                 controls.enableDamping = true;
@@ -516,7 +841,7 @@
                         s.position.set((i-1)*sp, 0, (j-1)*sp); scene.add(s);
                     }
                     const columns = [];
-                    const boxMat = new THREE.MeshStandardMaterial({color: '#2563eb', roughness: 0.15, metalness: 0.2, transparent: true, opacity: 1});
+                    const boxMat = new THREE.MeshStandardMaterial({color: '#2563eb', roughness: 0.15, metalness: 0.2, transparent: true, opacity:1});
                     for (let i=0;i<grid;i++) for (let j=0;j<grid;j++) {
                         const group = new THREE.Group();
                         for (let y=0; y<3; y++) {
@@ -525,15 +850,12 @@
                             group.add(box);
                         }
                         scene.add(group);
-                        columns.push({ group, origY: group.children.map(c=>c.position.y) });
+                        columns.push({ group, targetOpacity:1, currentOpacity:1 });
                     }
-                    const btn = createDiamondBtn(container, '◆', () => {
+                    const btn = createDiamondBtn(container, () => {
                         const applied = btn.classList.toggle('applied');
-                        columns.forEach(col => {
-                            col.group.children.forEach(box => {
-                                box.material.opacity = applied ? 0 : 1;
-                            });
-                        });
+                        columns.forEach(col => { col.targetOpacity = applied ? 0 : 1; });
+                        triggerRipple(container, 16, 16);
                     });
                 } else {
                     const geo = new THREE.TorusKnotGeometry(1.5, 0.4, 128, 16);
@@ -545,6 +867,12 @@
                 function animate() {
                     const id = requestAnimationFrame(animate);
                     controls.update();
+                    if (type === 'site') {
+                        columns.forEach(col => {
+                            col.currentOpacity += (col.targetOpacity - col.currentOpacity) * 0.12;
+                            col.group.children.forEach(box => { box.material.opacity = col.currentOpacity; });
+                        });
+                    }
                     renderer.render(scene, cam);
                     return id;
                 }
@@ -565,22 +893,24 @@
             createScene('viz-3d-b', 'torus');
         }
 
-        // ----- 4D -----
+        // ========== 4D (fog + matrix overlay) ==========
         function init4D() {
             function createTesseract(containerId, color) {
                 const container = document.getElementById(containerId);
                 container.innerHTML = '';
                 const scene = new THREE.Scene();
-                scene.background = new THREE.Color('#f8fafc');
+                scene.background = new THREE.Color(document.body.classList.contains('dark-mode') ? '#1e293b' : '#f8fafc');
                 const cam = new THREE.PerspectiveCamera(45, container.clientWidth/container.clientHeight, 0.1, 100);
                 cam.position.set(4,4,6);
-                const renderer = new THREE.WebGLRenderer({antialias: true});
+                const renderer = new THREE.WebGLRenderer({antialias: true, powerPreference: 'high-performance'});
                 renderer.setSize(container.clientWidth, container.clientHeight);
+                renderer.setPixelRatio(window.devicePixelRatio);
                 container.appendChild(renderer.domElement);
                 const controls = new THREE.OrbitControls(cam, renderer.domElement);
                 controls.enableDamping = true;
                 scene.add(new THREE.AmbientLight(0xffffff, 0.7));
                 const dir = new THREE.DirectionalLight(0xffffff, 0.8); dir.position.set(1,1,1); scene.add(dir);
+                scene.fog = new THREE.Fog(0xf8fafc, 5, 12);
 
                 const verts4D = [];
                 for (let i=0;i<16;i++) {
@@ -592,18 +922,22 @@
                     const diff = [0,1,2,3].filter(k => verts4D[i].getComponent(k) !== verts4D[j].getComponent(k));
                     if (diff.length === 1) edges.push([i,j]);
                 }
-                // Edges
                 const edgeGeo = new THREE.BufferGeometry();
                 const pos = new Float32Array(edges.length*2*3);
                 edgeGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
                 const lines = new THREE.LineSegments(edgeGeo, new THREE.LineBasicMaterial({color: color||'#2563eb'}));
                 scene.add(lines);
-                // Vertices
                 const dotGeo = new THREE.SphereGeometry(0.08, 8, 8);
                 const dotMat = new THREE.MeshStandardMaterial({color: color||'#2563eb', roughness: 0.3});
-                const dots = verts4D.map(() => {
-                    const dot = new THREE.Mesh(dotGeo, dotMat); scene.add(dot); return dot;
-                });
+                const dots = verts4D.map(() => { const dot = new THREE.Mesh(dotGeo, dotMat); scene.add(dot); return dot; });
+
+                const matrixOverlay = document.createElement('div');
+                matrixOverlay.style.position = 'absolute'; matrixOverlay.style.top = '10px'; matrixOverlay.style.right = '10px';
+                matrixOverlay.style.zIndex = '15'; matrixOverlay.style.fontFamily = 'var(--font-mono)';
+                matrixOverlay.style.fontSize = '0.75rem'; matrixOverlay.style.color = '#94a3b8';
+                matrixOverlay.style.background = 'rgba(15,23,42,0.7)'; matrixOverlay.style.padding = '6px 10px';
+                matrixOverlay.style.borderRadius = '6px';
+                container.appendChild(matrixOverlay);
 
                 function project4D(v, angle) {
                     const cos = Math.cos(angle), sin = Math.sin(angle);
@@ -611,7 +945,6 @@
                     const scale = 1/(3+w);
                     return new THREE.Vector3(v.x*scale, y*scale, v.z*scale);
                 }
-
                 let angle = 0;
                 function animate() {
                     const id = requestAnimationFrame(animate);
@@ -625,10 +958,9 @@
                         idx+=6;
                     });
                     lines.geometry.attributes.position.needsUpdate = true;
-                    dots.forEach((dot, i) => {
-                        const p = project4D(verts4D[i], angle);
-                        dot.position.copy(p);
-                    });
+                    dots.forEach((dot, i) => { dot.position.copy(project4D(verts4D[i], angle)); });
+                    const cos = Math.cos(angle), sin = Math.sin(angle);
+                    matrixOverlay.innerHTML = `Rot(θ) = [cosθ sinθ; -sinθ cosθ]<br>θ = ${angle.toFixed(2)} rad`;
                     controls.update();
                     renderer.render(scene, cam);
                     return id;
@@ -650,14 +982,10 @@
             createTesseract('viz-4d-b', '#dc2626');
         }
 
-        setTimeout(init1D, 100);
-        // MathJax reprocess on toggle
-        document.body.addEventListener('toggle', e => {
-            if (e.target.tagName === 'DETAILS' && e.target.open && typeof MathJax !== 'undefined') {
-                MathJax.typesetPromise([e.target]);
-            }
-        });
+        // ---- Initial load ----
+        init1D();
     })();
     </script>
 </body>
 </html>
+
