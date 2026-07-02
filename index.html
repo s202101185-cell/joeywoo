@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Joey Woo — category theory, quantum foundations, and interactive concept models. Papers, preprints, and playful precision.">
-  <meta name="google-site-verification" content="-gu3NFsRhLgN4wervJXu0iI68wFNmFRY9myqKUGmu70">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Joey Woo — research in category theory and quantum foundations. Concrete models, preprints, and interactive concept maps." />
+  <meta name="google-site-verification" content="-gu3NFsRhLgN4wervJXu0iI68wFNmFRY9myqKUGmu70" />
   <title>Joey Woo · Mathematics</title>
 
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -16,93 +15,94 @@
   <link rel="canonical" href="https://s202101185-cell.github.io/">
 </head>
 <body>
-  <header class="site-header">
-    <div class="header-inner">
-      <a class="brand" href="index.html" aria-label="Home — Joey Woo">
+  <header class="site-header" role="banner">
+    <div class="header-inner container">
+      <a class="brand" href="index.html" aria-label="Joey Woo home">
         <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="24" cy="24" r="22"/></g></svg>
         <span class="brand-name">Joey Woo</span>
       </a>
 
-      <nav class="nav">
+      <nav class="nav" role="navigation" aria-label="Main navigation">
         <a href="index.html">Home</a>
         <a href="research.html">Research</a>
         <a href="publications.html">Publications</a>
         <a href="about.html">About</a>
         <a href="contact.html" class="cta">Contact</a>
       </nav>
+
+      <div class="header-actions">
+        <button id="theme-toggle" class="icon-btn" aria-label="Toggle theme">◐</button>
+      </div>
     </div>
   </header>
 
-  <main>
-    <section class="hero-outer" aria-labelledby="hero-heading">
-      <div class="hero">
+  <main role="main">
+    <section class="hero-outer">
+      <div class="hero container split" aria-labelledby="hero-heading">
         <div class="hero-left">
-          <p class="eyebrow">Mathematics • Categories • Quantum Ideas</p>
+          <p class="eyebrow">Mathematics · Categories · Quantum Foundations</p>
           <h1 id="hero-heading">Cohesion, modality, and the curious geometry of logic</h1>
-          <p class="subtitle">I build concrete environments where classical and quantum intuitions meet — and I try to make the meeting polite.</p>
+          <p class="lede">I construct explicit models where classical and quantum intuitions coexist, clarify obstructions, and explore constructive resolutions.</p>
 
           <div class="hero-actions">
             <a class="btn primary" href="publications.html">Recent papers</a>
             <a class="btn ghost" href="research.html">Research overview</a>
           </div>
 
-          <p class="witty">Witty margin note: compiled with strong tea, weak coffee, and an occasional category-theoretic pun.</p>
+          <p class="witty" id="hero-quip" aria-live="polite"></p>
         </div>
 
         <aside class="hero-card" aria-hidden="false">
           <div class="hero-card-inner">
             <div class="hero-accent" aria-hidden="true"></div>
-            <h3 class="card-title">Featured preprint</h3>
-            <h4 class="paper-title">A Cohesive ∞‑Topos with a Quantum Modality from Finite‑Dimensional C*-Algebras</h4>
+            <p class="card-title">Featured preprint</p>
+            <h2 class="paper-title">A Cohesive ∞‑Topos with a Quantum Modality from Finite‑Dimensional C*-Algebras</h2>
             <p class="paper-meta"><a href="https://arxiv.org/abs/2606.02269" target="_blank" rel="noopener">arXiv:2606.02269</a> · 2026</p>
             <div class="card-actions">
               <a class="btn tiny" href="https://arxiv.org/abs/2606.02269" target="_blank" rel="noopener">View on arXiv</a>
               <button class="btn tiny outline model-btn" data-model="quantum-geometry">View model</button>
             </div>
-            <p class="card-fineprint">Tip: click “View model” to explore the conceptual map — drag nodes to rearrange ideas.</p>
+            <p class="card-fineprint">Interactive maps provide a compositional view of the ideas; drag nodes to explore relations.</p>
           </div>
 
           <svg class="flourish" viewBox="0 0 200 60" preserveAspectRatio="none" aria-hidden="true">
-            <path d="M0,48 C40,10 110,10 200,48" fill="none" stroke="rgba(2,6,23,0.06)" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M0,48 C40,10 110,10 200,48" fill="none" stroke="rgba(7,18,34,0.06)" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
         </aside>
       </div>
 
-      <div class="hero-note">
-        <svg class="tiny-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v6" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
-        <div>
-          <strong>Interactive models</strong> — concept maps are embedded throughout. The site learns your taste locally (consent required).
-        </div>
+      <div class="hero-note container">
+        <small><strong>Interactive models:</strong> concept maps are embedded across the site. Personalization runs locally and only with consent.</small>
       </div>
     </section>
 
-    <section class="container features" aria-label="Quick links and highlights">
+    <section class="container features" aria-label="Highlights">
       <div class="grid">
         <article class="feature card" data-enhance="true" data-model="research-timeline">
           <h3>Research snapshot</h3>
-          <p>Constructive models of cohesion and quantum modality; obstructions, resolutions, and computational examples.</p>
-          <p class="feature-foot">If you like dense arguments, try the model — it will be gentle.</p>
+          <p>Concrete models of cohesive ∞‑topoi, quantum modalities, and obstruction theory with computational examples.</p>
+          <p class="feature-foot">If you enjoy precise statements, the diagrams will make you smile.</p>
           <p><button class="btn outline model-btn" data-model="research-timeline">Open model</button></p>
         </article>
 
         <article class="feature card" data-enhance="true">
           <h3>Publications</h3>
-          <p>Preprints and (eventually) journal versions; DOIs and arXiv links are surfaced automatically.</p>
-          <p class="feature-foot">Witty aside: paper titles are longer than the abstracts — which says something.</p>
+          <p>Preprints and published work. The site surfaces arXiv and DOI links automatically where available.</p>
+          <p class="feature-foot">Paper titles are long by design — they carry useful density.</p>
           <p><a class="btn ghost" href="publications.html">Browse papers</a></p>
         </article>
 
         <article class="feature card" data-enhance="true">
           <h3>Collaborate</h3>
-          <p>Short-term consults, joint problems, or long proofs.—I prefer clarity to cleverness, mostly.</p>
-          <p class="feature-foot">Pro tip: mention which axiom you dislike in the first line.</p>
+          <p>Short consults, joint projects, or longer collaborations. I prefer clarity and rigor; humor is optional.</p>
+          <p class="feature-foot">Pro tip: include a short summary and a claimed lemma in your email.</p>
           <p><a class="btn ghost" href="contact.html">Get in touch</a></p>
         </article>
 
         <article class="feature card" data-enhance="true">
           <h3>About</h3>
-          <p>Independent researcher based in Hong Kong. I keep a small, focused set of projects and prefer good diagrams to bad jokes.</p>
-          <p class="feature-foot">Minor joke: I reject the Axiom of Bad Coffee.</p>
+          <p>Independent researcher based in Hong Kong working on category theory and quantum foundations.</p>
+          <p class="feature-foot">I try to make complex ideas readable without losing precision.</p>
           <p><a class="btn ghost" href="about.html">Read more</a></p>
         </article>
       </div>
@@ -111,27 +111,28 @@
 
   <footer class="site-footer">
     <div class="container footer-inner">
-      <p class="copyright">© 2026 Joey Woo · <a href="mailto:s202101185@student.cky.edu.hk">Email</a> · <a href="https://orcid.org/0009-0008-8888-9495" target="_blank" rel="noopener">ORCID</a></p>
-      <p class="footer-witty">Compiled with black tea, a healthy disrespect for the Axiom of Choice, and just enough sleep to remain continuous.</p>
+      <p class="small muted">© 2026 Joey Woo · <a href="mailto:s202101185@student.cky.edu.hk">Email</a> · <a href="https://orcid.org/0009-0008-8888-9495" target="_blank" rel="noopener">ORCID</a></p>
+      <p class="small muted">Compiled with careful proofs and occasional good tea.</p>
     </div>
   </footer>
 
-  <!-- personalization & interactive models (local-only) -->
   <script src="assets/js/ai-personalizer-full.js" defer></script>
 
-  <!-- small inline script to ensure model buttons created early still work -->
   <script>
+    // theme toggle wiring (keeps UI responsive even if main script loads later)
     (function(){
-      // When model buttons (class model-btn) are clicked, the ai script will hook model opening.
-      // This no-op is here as a compatibility hook if ai script exposes window.__aiLocal.openModel.
-      document.addEventListener('click', function(e){
-        const b = e.target.closest('.model-btn');
-        if (!b) return;
-        const model = b.dataset.model;
-        if (window.__aiLocal && typeof window.__aiLocal.openModelModal === 'function') {
-          window.__aiLocal.openModelModal(model);
-        }
+      function setTheme(t){ document.documentElement.setAttribute('data-theme', t); try{ localStorage.setItem('site:theme', t); }catch(e){} }
+      document.getElementById('theme-toggle')?.addEventListener('click', function(){
+        const current = document.documentElement.getAttribute('data-theme') || 'light';
+        setTheme(current === 'light' ? 'dark' : 'light');
       });
+      // initialize from storage or system
+      const saved = localStorage.getItem('site:theme');
+      if(saved) setTheme(saved);
+      else {
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        setTheme(prefersDark ? 'dark' : 'light');
+      }
     })();
   </script>
 </body>
