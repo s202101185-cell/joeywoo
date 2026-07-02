@@ -2,42 +2,47 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Interactive visualizations of Joey Woo's research: cohesive ∞-topoi, quantum modalities, and the precomposition obstruction." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="Interactive mathematical visualizations by Joey Woo." />
     <title>Visualizations · Joey Woo</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         .viz-container {
             position: relative;
-            width: 100%;
-            height: 500px;
-            margin: 2rem 0;
+            width: 100%; height: 500px;
+            margin: 1.5rem 0;
             border: 1px solid #e2e8f0;
             border-radius: 10px;
             overflow: hidden;
+            background: #f8fafc;
+        }
+        .viz-row {
+            display: flex; gap: 1rem; flex-wrap: wrap;
+        }
+        .viz-col {
+            flex: 1; min-width: 280px;
         }
         .viz-tabs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
+            display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;
         }
         .viz-tab {
-            padding: 0.5rem 1.2rem;
-            background: #f1f5f9;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            cursor: pointer;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
-            transition: background 0.2s;
+            padding: 0.4rem 1rem;
+            background: #f1f5f9; border: 1px solid #cbd5e1;
+            border-radius: 6px; cursor: pointer;
+            font-family: 'Inter', sans-serif; font-size: 0.85rem;
+            transition: all 0.2s;
         }
         .viz-tab.active {
-            background: var(--accent);
-            color: #fff;
-            border-color: var(--accent);
+            background: var(--accent, #2563eb); color: #fff; border-color: var(--accent, #2563eb);
         }
         canvas { display: block; }
+        .explain-collapse {
+            margin: 1rem 0;
+        }
+        .explain-collapse summary {
+            font-weight: 600; cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -54,38 +59,130 @@
         <div class="hero-content fade-in">
             <div class="hero-text">
                 <h1>Visual Explorations</h1>
-                <p>Geometric intuition for cohesive ∞‑topoi, quantum modalities, and the obstruction theorem.</p>
+                <p>Interactive geometry of cohesive ∞‑topoi, quantum modalities, and the obstruction theorem.</p>
             </div>
         </div>
     </header>
 
     <main class="container fade-in">
-        <div class="viz-tabs">
-            <button class="viz-tab active" data-view="1d">1D</button>
-            <button class="viz-tab" data-view="2d">2D</button>
-            <button class="viz-tab" data-view="3d">3D</button>
-            <button class="viz-tab" data-view="4d">4D</button>
+
+        <!-- Dimension tabs -->
+        <div class="viz-tabs" id="dim-tabs">
+            <button class="viz-tab active" data-dim="1d">1D</button>
+            <button class="viz-tab" data-dim="2d">2D</button>
+            <button class="viz-tab" data-dim="3d">3D</button>
+            <button class="viz-tab" data-dim="4d">4D</button>
         </div>
 
-        <div class="viz-container" id="viz-container-1d">
-            <canvas id="canvas-1d"></canvas>
-        </div>
-        <div class="viz-container" id="viz-container-2d" style="display:none;">
-            <canvas id="canvas-2d"></canvas>
-        </div>
-        <div class="viz-container" id="viz-container-3d" style="display:none;">
-            <canvas id="canvas-3d"></canvas>
-        </div>
-        <div class="viz-container" id="viz-container-4d" style="display:none;">
-            <canvas id="canvas-4d"></canvas>
+        <!-- Panels for each dimension (only active one shown) -->
+        <div id="panel-1d">
+            <div class="viz-row">
+                <div class="viz-col">
+                    <div class="viz-container" id="viz-1d-a"></div>
+                    <details class="explain-collapse">
+                        <summary>What this shows (plain English)</summary>
+                        <p>Each blue dot is a possible state of a classical system. Drag them to see how the centre comonad collapses them to a single classical point.</p>
+                    </details>
+                    <details class="explain-collapse">
+                        <summary>Mathematical description</summary>
+                        <p>The line represents the Gelfand spectrum of a commutative C*-algebra. Under the centre comonad \(Q^\diamond\), the representable sheaf \(\mathbf{y}_{M_2}\) becomes empty; only commutative algebras survive. This interactive model shows that collapse: all points coalesce into the unique trivial character.</p>
+                    </details>
+                </div>
+                <div class="viz-col">
+                    <div class="viz-container" id="viz-1d-b"></div>
+                    <details class="explain-collapse">
+                        <summary>What this shows (plain English)</summary>
+                        <p>Adjust the spread of the points with the slider: when the spread is zero, the classical core is a single point—the system has no quantum degrees of freedom left.</p>
+                    </details>
+                    <details class="explain-collapse">
+                        <summary>Mathematical description</summary>
+                        <p>The slider parameter \(s\) controls the dimension of the centre. For \(s=0\), the algebra is simple and non‑commutative; the hom‑set \(\Hom(\mathbb{C}, M_n)\) is empty, so the state space collapses to a point. For \(s>0\), multiple commutative summands exist, giving a larger spectrum.</p>
+                    </details>
+                </div>
+            </div>
         </div>
 
-        <div class="explain-content">
-            <p><strong>1D – Gelfand spectrum collapse.</strong> Points on the line represent characters of a commutative C*-algebra; under the centre comonad, the spectrum collapses to a single point (the trivial character).</p>
-            <p><strong>2D – Precomposition obstruction.</strong> The diagram illustrates how the diagonal map Δ fails to commute with Day convolution, collapsing the multiplicative conjunction to the cartesian product.</p>
-            <p><strong>3D – Quantum site.</strong> The grid of spheres represents geometric manifolds; vertical columns are algebraic Hilbert spaces. Click <em>Apply Q</em> to see the quantum modality project onto the commutative core.</p>
-            <p><strong>4D – Distributive law coherence.</strong> A rotating tesseract encodes the mixed distributive law. Coloured edges trace the entwining map ψ : g ⊗ δₓ → δ_{gxg⁻¹} ⊗ g.</p>
+        <div id="panel-2d" style="display:none;">
+            <div class="viz-row">
+                <div class="viz-col">
+                    <div class="viz-container" id="viz-2d-a"></div>
+                    <details class="explain-collapse">
+                        <summary>What this shows (plain English)</summary>
+                        <p>Pinch‑zoom and drag the diagram. It shows the failure of the diagonal map \(\Delta\) to commute with Day convolution. Toggle the button to see the collapse when the classical core is cartesian.</p>
+                    </details>
+                    <details class="explain-collapse">
+                        <summary>Mathematical description</summary>
+                        <p>The square encodes the naturality condition for a cloning map \(c:\mathbf{y}_{(-)}\to\mathbf{y}_{(-)}\otimes\mathbf{y}_{(-)}\). When the classical core is cartesian, the Seely isomorphism trivialises and the two sides of the square coincide.</p>
+                    </details>
+                </div>
+                <div class="viz-col">
+                    <div class="viz-container" id="viz-2d-b"></div>
+                    <details class="explain-collapse">
+                        <summary>What this shows (plain English)</summary>
+                        <p>This canvas lets you draw your own diagram. Use it to explore how the obstruction changes when you change the underlying site.</p>
+                    </details>
+                    <details class="explain-collapse">
+                        <summary>Mathematical description</summary>
+                        <p>A freehand sketch of the precomposition obstruction. The mathematical content is the same as the left diagram, but the open canvas invites the reader to experiment.</p>
+                    </details>
+                </div>
+            </div>
         </div>
+
+        <div id="panel-3d" style="display:none;">
+            <div class="viz-row">
+                <div class="viz-col">
+                    <div class="viz-container" id="viz-3d-a"></div>
+                    <details class="explain-collapse">
+                        <summary>What this shows (plain English)</summary>
+                        <p>Rotate, zoom, and pan the 3D scene. The dark spheres are geometric manifolds; the blue columns are algebraic Hilbert spaces. Click <em>Apply Q</em> to see the quantum comonad project the columns to their commutative core.</p>
+                    </details>
+                    <details class="explain-collapse">
+                        <summary>Mathematical description</summary>
+                        <p>\( \mathbf{E} = \Sh(\mathbb{S}, J) \) with \(\mathbb{S} = \Mfd \times \Hilb_{\CP}^{\mathrm{op}}\). The spheres represent objects in \(\Mfd\); the columns represent \(\Hilb_{\CP}^{\mathrm{op}}\). \(Q^\diamond\) acts as \(i_! i^*\) with \(i: \cCAlg_{\CP}^{\mathrm{op}} \hookrightarrow \Hilb_{\CP}^{\mathrm{op}}\), collapsing each column to the classical subcategory.</p>
+                    </details>
+                </div>
+                <div class="viz-col">
+                    <div class="viz-container" id="viz-3d-b"></div>
+                    <details class="explain-collapse">
+                        <summary>What this shows (plain English)</summary>
+                        <p>Another view: a torus knot (representing a mixed distributive law) rotates in space. You can twist it from every angle.</p>
+                    </details>
+                    <details class="explain-collapse">
+                        <summary>Mathematical description</summary>
+                        <p>The torus knot parametrises the entwining map \(\psi(g\otimes\delta_x) = \delta_{gxg^{-1}}\otimes g\) for \(G = S_3\). The knot’s crossings encode the four axioms of a mixed distributive law.</p>
+                    </details>
+                </div>
+            </div>
+        </div>
+
+        <div id="panel-4d" style="display:none;">
+            <div class="viz-row">
+                <div class="viz-col">
+                    <div class="viz-container" id="viz-4d-a"></div>
+                    <details class="explain-collapse">
+                        <summary>What this shows (plain English)</summary>
+                        <p>A tesseract (4D hypercube) rotating. The coloured edges show how the distributive law \(\lambda\) maps one monad–comonad pair to the other.</p>
+                    </details>
+                    <details class="explain-collapse">
+                        <summary>Mathematical description</summary>
+                        <p>The 4D rotation illustrates the coherence cube of the mixed distributive law between \(T\) (group algebra monad) and \(S\) (dual coalgebra comonad). Each edge is a component of \(\lambda\).</p>
+                    </details>
+                </div>
+                <div class="viz-col">
+                    <div class="viz-container" id="viz-4d-b"></div>
+                    <details class="explain-collapse">
+                        <summary>What this shows (plain English)</summary>
+                        <p>A second tesseract showing the inverse distributive law. The winding edges show that the inverse exists because the entwining map is invertible.</p>
+                    </details>
+                    <details class="explain-collapse">
+                        <summary>Mathematical description</summary>
+                        <p>The inverse \(\lambda^{-1} = \psi^{-1}\otimes\id\) is constructed from the inverse entwining \(\psi^{-1}(\delta_y\otimes g)=g\otimes\delta_{g^{-1}yg}\). This tesseract visualises the symmetry.</p>
+                    </details>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <footer>
@@ -95,342 +192,384 @@
         </p>
     </footer>
 
-    <!-- Three.js import map -->
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "https://unpkg.com/three@0.126.0/build/three.module.js",
-                "three/addons/": "https://unpkg.com/three@0.126.0/examples/jsm/"
+    <!-- Three.js and OrbitControls (loaded globally) -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.126.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.126.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="assets/js/ai-enhancer.js" defer></script>
+
+    <script>
+    (function(){
+        // ---- tab switching ----
+        const dimTabs = document.querySelectorAll('#dim-tabs .viz-tab');
+        const panels = {
+            '1d': document.getElementById('panel-1d'),
+            '2d': document.getElementById('panel-2d'),
+            '3d': document.getElementById('panel-3d'),
+            '4d': document.getElementById('panel-4d')
+        };
+        let activeDim = '1d';
+        let threeJSCleanups = [];
+
+        function switchDim(dim) {
+            if (dim === activeDim) return;
+            panels[activeDim].style.display = 'none';
+            panels[dim].style.display = 'block';
+            // stop any running Three.js render loops and dispose resources
+            threeJSCleanups.forEach(fn => fn());
+            threeJSCleanups = [];
+            dimTabs.forEach(t => t.classList.remove('active'));
+            document.querySelector(`#dim-tabs .viz-tab[data-dim="${dim}"]`).classList.add('active');
+            activeDim = dim;
+            // initialise the new dimension
+            switch(dim) {
+                case '1d': init1D(); break;
+                case '2d': init2D(); break;
+                case '3d': init3D(); break;
+                case '4d': init4D(); break;
             }
         }
-    </script>
-    <script src="assets/js/ai-enhancer.js" defer></script>
-    <script type="module">
-        // Tab switching
-        const tabs = document.querySelectorAll('.viz-tab');
-        const containers = {
-            '1d': document.getElementById('viz-container-1d'),
-            '2d': document.getElementById('viz-container-2d'),
-            '3d': document.getElementById('viz-container-3d'),
-            '4d': document.getElementById('viz-container-4d')
-        };
-        let activeView = '1d';
-        let threeScene, threeRenderer, threeCamera, controls, animateId;
-        
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                tabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                const view = tab.dataset.view;
-                if (view === activeView) return;
-                // hide all
-                Object.values(containers).forEach(c => c.style.display = 'none');
-                containers[view].style.display = 'block';
-                // stop any running animation
-                if (animateId) cancelAnimationFrame(animateId);
-                // initialize the selected view
-                switch(view) {
-                    case '1d': init1D(); break;
-                    case '2d': init2D(); break;
-                    case '3d': init3D(); break;
-                    case '4d': init4D(); break;
-                }
-                activeView = view;
-            });
+
+        dimTabs.forEach(tab => {
+            tab.addEventListener('click', () => switchDim(tab.dataset.dim));
         });
 
-        // ------- 1D: Spectrum line -------
+        // ----- 1D visualizations (draggable points) -----
         function init1D() {
-            const canvas = document.getElementById('canvas-1d');
-            const ctx = canvas.getContext('2d');
-            let width = canvas.parentElement.clientWidth;
-            let height = canvas.parentElement.clientHeight;
-            canvas.width = width;
-            canvas.height = height;
-            let collapsed = false;
-            const toggleBtn = document.createElement('button');
-            toggleBtn.textContent = 'Collapse (apply Q)';
-            toggleBtn.style.position = 'absolute';
-            toggleBtn.style.bottom = '10px';
-            toggleBtn.style.left = '10px';
-            toggleBtn.style.zIndex = '10';
-            toggleBtn.className = 'viz-tab';
-            canvas.parentElement.appendChild(toggleBtn);
-            toggleBtn.addEventListener('click', () => { collapsed = !collapsed; draw(); });
-            function draw() {
-                ctx.clearRect(0, 0, width, height);
-                ctx.fillStyle = '#0f172a';
-                ctx.font = '14px Inter, sans-serif';
-                ctx.fillText('Spectrum of commutative C*-algebra', 20, 30);
-                const lineY = height/2;
-                ctx.beginPath();
-                ctx.moveTo(40, lineY);
-                ctx.lineTo(width-40, lineY);
-                ctx.strokeStyle = '#94a3b8';
-                ctx.stroke();
-                const numPoints = 5;
-                const spacing = (width-80)/(numPoints-1);
-                for(let i=0; i<numPoints; i++){
-                    let x = 40 + i*spacing;
-                    if(collapsed) x = width/2; // all collapse to middle
-                    ctx.beginPath();
-                    ctx.arc(x, lineY, 6, 0, 2*Math.PI);
-                    ctx.fillStyle = i===2 ? '#2563eb' : '#64748b';
-                    ctx.fill();
+            ['viz-1d-a', 'viz-1d-b'].forEach(containerId => {
+                const container = document.getElementById(containerId);
+                container.innerHTML = ''; // clear previous
+                const canvas = document.createElement('canvas');
+                canvas.style.width = '100%';
+                canvas.style.height = '100%';
+                container.appendChild(canvas);
+                const ctx = canvas.getContext('2d');
+                let width, height;
+                function resize() {
+                    width = container.clientWidth;
+                    height = container.clientHeight;
+                    canvas.width = width;
+                    canvas.height = height;
+                    draw();
                 }
-                if(collapsed){
-                    ctx.fillStyle = '#dc2626';
-                    ctx.font = 'italic 12px Inter';
-                    ctx.fillText('Classical core = single point', width/2+15, lineY-15);
-                }
-            }
-            draw();
-            // resize handler
-            window.addEventListener('resize', () => {
-                width = canvas.parentElement.clientWidth;
-                height = canvas.parentElement.clientHeight;
-                canvas.width = width;
-                canvas.height = height;
-                draw();
-            });
-        }
+                window.addEventListener('resize', resize);
+                resize();
 
-        // ------- 2D: Obstruction diagram -------
-        function init2D() {
-            const canvas = document.getElementById('canvas-2d');
-            const ctx = canvas.getContext('2d');
-            let width = canvas.parentElement.clientWidth;
-            let height = canvas.parentElement.clientHeight;
-            canvas.width = width;
-            canvas.height = height;
-            function draw() {
-                ctx.clearRect(0,0,width,height);
-                ctx.fillStyle = '#0f172a';
-                ctx.font = '14px Inter, sans-serif';
-                ctx.fillText('Precomposition Obstruction', 20, 30);
-                // nodes
-                const nodes = [
-                    {x: width/4, y: height/3, label: 'Δ'},
-                    {x: 3*width/4, y: height/3, label: 'Q(X×Y)'},
-                    {x: width/4, y: 2*height/3, label: 'QX ⊗ QY'},
-                    {x: 3*width/4, y: 2*height/3, label: 'X×Y'}
-                ];
-                nodes.forEach(n => {
-                    ctx.beginPath();
-                    ctx.arc(n.x, n.y, 8, 0, 2*Math.PI);
-                    ctx.fillStyle = '#2563eb';
-                    ctx.fill();
-                    ctx.fillStyle = '#fff';
-                    ctx.font = 'bold 12px Inter';
-                    ctx.fillText(n.label, n.x-15, n.y-15);
-                });
-                // arrows
-                ctx.strokeStyle = '#94a3b8';
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.moveTo(nodes[0].x, nodes[0].y);
-                ctx.lineTo(nodes[1].x, nodes[1].y);
-                ctx.stroke();
-                ctx.beginPath();
-                ctx.moveTo(nodes[0].x, nodes[0].y);
-                ctx.lineTo(nodes[2].x, nodes[2].y);
-                ctx.stroke();
-                ctx.beginPath();
-                ctx.moveTo(nodes[2].x, nodes[2].y);
-                ctx.lineTo(nodes[3].x, nodes[3].y);
-                ctx.stroke();
-                ctx.beginPath();
-                ctx.moveTo(nodes[1].x, nodes[1].y);
-                ctx.lineTo(nodes[3].x, nodes[3].y);
-                ctx.stroke();
-                // collapse annotation
-                ctx.fillStyle = '#dc2626';
-                ctx.font = 'italic 12px Inter';
-                ctx.fillText('Day convolution collapses to cartesian product', width/2-80, height-20);
-            }
-            draw();
-            window.addEventListener('resize', () => {
-                width = canvas.parentElement.clientWidth;
-                height = canvas.parentElement.clientHeight;
-                canvas.width = width;
-                canvas.height = height;
-                draw();
-            });
-        }
-
-        // ------- 3D: Quantum site -------
-        function init3D() {
-            const container = document.getElementById('viz-container-3d');
-            const canvas = document.getElementById('canvas-3d');
-            // Setup Three.js
-            threeScene = new THREE.Scene();
-            threeScene.background = new THREE.Color('#f8fafc');
-            threeCamera = new THREE.PerspectiveCamera(45, container.clientWidth/container.clientHeight, 0.1, 100);
-            threeCamera.position.set(5,5,10);
-            threeRenderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true});
-            threeRenderer.setSize(container.clientWidth, container.clientHeight);
-            
-            // lights
-            threeScene.add(new THREE.AmbientLight(0xffffff, 0.6));
-            const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            dirLight.position.set(1,1,1);
-            threeScene.add(dirLight);
-
-            // Create a grid of spheres (manifolds) and columns (Hilbert spaces)
-            const gridSize = 3;
-            const spacing = 2;
-            const spheres = [];
-            const columns = []; // groups of vertical cubes
-            const modalityApplied = { value: false };
-
-            function createColumn(x,z) {
-                const group = new THREE.Group();
-                const material = new THREE.MeshStandardMaterial({color: '#2563eb', roughness: 0.3});
-                for(let y=0; y<3; y++){
-                    const box = new THREE.Mesh(new THREE.BoxGeometry(0.4,0.4,0.4), material);
-                    box.position.set(x, y*0.8 + 0.4, z);
-                    group.add(box);
-                }
-                return group;
-            }
-
-            // Manifold spheres
-            for(let i=0; i<gridSize; i++){
-                for(let j=0; j<gridSize; j++){
-                    const x = (i-1)*spacing;
-                    const z = (j-1)*spacing;
-                    const sphere = new THREE.Mesh(
-                        new THREE.SphereGeometry(0.3, 16, 16),
-                        new THREE.MeshStandardMaterial({color: '#0f172a', roughness: 0.5})
-                    );
-                    sphere.position.set(x, 0, z);
-                    threeScene.add(sphere);
-                    spheres.push(sphere);
-                    const column = createColumn(x, z);
-                    threeScene.add(column);
-                    columns.push({group: column, originalY: column.children.map(c => c.position.y)});
-                }
-            }
-
-            // Orbit controls
-            controls = new THREE.OrbitControls(threeCamera, threeRenderer.domElement);
-            controls.enableDamping = true;
-
-            // Button to toggle modality Q
-            const btn = document.createElement('button');
-            btn.textContent = 'Apply Q (collapse)';
-            btn.style.position = 'absolute';
-            btn.style.bottom = '10px';
-            btn.style.left = '10px';
-            btn.style.zIndex = '10';
-            btn.className = 'viz-tab';
-            container.appendChild(btn);
-            btn.addEventListener('click', () => {
-                modalityApplied.value = !modalityApplied.value;
-                columns.forEach(col => {
-                    const targetY = modalityApplied.value ? 0 : col.originalY;
-                    col.group.children.forEach((box, idx) => {
-                        box.position.y = targetY[idx];
+                // points (draggable)
+                let points = [];
+                if (containerId === 'viz-1d-a') {
+                    // fixed points that snap to centre on toggle
+                    const numPts = 7;
+                    for (let i = 0; i < numPts; i++) {
+                        points.push({ x: width * (0.1 + 0.12*i), collapsed: false });
+                    }
+                    const toggleBtn = document.createElement('button');
+                    toggleBtn.textContent = 'Collapse (apply Q)';
+                    toggleBtn.className = 'viz-tab';
+                    toggleBtn.style.position = 'absolute';
+                    toggleBtn.style.bottom = '10px';
+                    toggleBtn.style.left = '10px';
+                    toggleBtn.style.zIndex = '10';
+                    container.appendChild(toggleBtn);
+                    toggleBtn.addEventListener('click', () => {
+                        points.forEach(p => p.collapsed = !p.collapsed);
+                        draw();
                     });
+                } else {
+                    // slider controlled spread
+                    const slider = document.createElement('input');
+                    slider.type = 'range'; slider.min = 0; slider.max = 1; slider.step = 0.01; slider.value = 0.5;
+                    slider.style.position = 'absolute'; slider.style.bottom = '10px'; slider.style.left = '10px';
+                    slider.style.width = '150px';
+                    container.appendChild(slider);
+                    const numPts = 9;
+                    function updatePoints() {
+                        const s = parseFloat(slider.value);
+                        points = [];
+                        for (let i = 0; i < numPts; i++) {
+                            points.push({ baseX: width*(0.1 + 0.1*i), currentX: width*(0.1 + 0.1*i*(1-s)) });
+                        }
+                        draw();
+                    }
+                    slider.addEventListener('input', updatePoints);
+                    updatePoints();
+                }
+
+                let dragging = -1;
+                canvas.addEventListener('mousedown', e => {
+                    const rect = canvas.getBoundingClientRect();
+                    const mx = e.clientX - rect.left;
+                    const my = e.clientY - rect.top;
+                    for (let i = 0; i < points.length; i++) {
+                        const dx = mx - points[i].currentX;
+                        const dy = my - height/2;
+                        if (Math.sqrt(dx*dx+dy*dy) < 15) { dragging = i; break; }
+                    }
                 });
-            });
+                canvas.addEventListener('mousemove', e => {
+                    if (dragging < 0) return;
+                    const rect = canvas.getBoundingClientRect();
+                    points[dragging].currentX = e.clientX - rect.left;
+                    draw();
+                });
+                canvas.addEventListener('mouseup', () => { dragging = -1; });
+                // touch
+                canvas.addEventListener('touchstart', e => {
+                    e.preventDefault();
+                    const rect = canvas.getBoundingClientRect();
+                    const mx = e.touches[0].clientX - rect.left;
+                    const my = e.touches[0].clientY - rect.top;
+                    for (let i = 0; i < points.length; i++) {
+                        const dx = mx - points[i].currentX;
+                        const dy = my - height/2;
+                        if (Math.sqrt(dx*dx+dy*dy) < 15) { dragging = i; break; }
+                    }
+                });
+                canvas.addEventListener('touchmove', e => {
+                    e.preventDefault();
+                    if (dragging < 0) return;
+                    const rect = canvas.getBoundingClientRect();
+                    points[dragging].currentX = e.touches[0].clientX - rect.left;
+                    draw();
+                });
+                canvas.addEventListener('touchend', () => { dragging = -1; });
 
-            function animate3D() {
-                animateId = requestAnimationFrame(animate3D);
-                controls.update();
-                threeRenderer.render(threeScene, threeCamera);
-            }
-            animate3D();
-
-            window.addEventListener('resize', () => {
-                threeCamera.aspect = container.clientWidth/container.clientHeight;
-                threeCamera.updateProjectionMatrix();
-                threeRenderer.setSize(container.clientWidth, container.clientHeight);
+                function draw() {
+                    ctx.clearRect(0,0,width,height);
+                    ctx.fillStyle = '#0f172a';
+                    ctx.font = '12px Inter, sans-serif';
+                    ctx.fillText(containerId==='viz-1d-a'?'Spectrum collapse':'Spectrum spread', 10, 20);
+                    ctx.beginPath();
+                    ctx.moveTo(40, height/2); ctx.lineTo(width-40, height/2);
+                    ctx.strokeStyle = '#cbd5e1'; ctx.stroke();
+                    points.forEach(p => {
+                        const x = containerId==='viz-1d-a' ? (p.collapsed ? width/2 : p.x) : p.currentX;
+                        ctx.beginPath();
+                        ctx.arc(x, height/2, 7, 0, 2*Math.PI);
+                        ctx.fillStyle = '#2563eb';
+                        ctx.fill();
+                    });
+                }
             });
         }
 
-        // ------- 4D: Tesseract projection -------
-        function init4D() {
-            const container = document.getElementById('viz-container-4d');
-            const canvas = document.getElementById('canvas-4d');
-            // We'll use a 4D hypercube (tesseract) rotating in 4D and project to 3D then 2D
-            const scene = new THREE.Scene();
-            scene.background = new THREE.Color('#f8fafc');
-            const camera = new THREE.PerspectiveCamera(45, container.clientWidth/container.clientHeight, 0.1, 100);
-            camera.position.set(4,4,8);
-            const renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true});
-            renderer.setSize(container.clientWidth, container.clientHeight);
-            
-            scene.add(new THREE.AmbientLight(0xffffff, 0.6));
-            const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            dirLight.position.set(1,1,1);
-            scene.add(dirLight);
+        // ----- 2D visualizations (pan/zoom canvas) -----
+        function init2D() {
+            function setup2D(containerId) {
+                const container = document.getElementById(containerId);
+                container.innerHTML = '';
+                const canvas = document.createElement('canvas');
+                canvas.style.width = '100%'; canvas.style.height = '100%';
+                container.appendChild(canvas);
+                const ctx = canvas.getContext('2d');
+                let width, height;
+                function resize() { width = container.clientWidth; height = container.clientHeight; canvas.width = width; canvas.height = height; draw(); }
+                window.addEventListener('resize', resize);
+                resize();
+                // transform for pan/zoom
+                let tx = 0, ty = 0, scale = 1;
+                let dragging = false, lastX, lastY;
+                function toWorld(sx, sy) { return { x: (sx-tx)/scale, y: (sy-ty)/scale }; }
+                canvas.addEventListener('mousedown', e => { dragging = true; lastX = e.clientX; lastY = e.clientY; });
+                canvas.addEventListener('mousemove', e => {
+                    if (!dragging) return;
+                    tx += e.clientX - lastX; ty += e.clientY - lastY;
+                    lastX = e.clientX; lastY = e.clientY;
+                    draw();
+                });
+                canvas.addEventListener('mouseup', () => { dragging = false; });
+                canvas.addEventListener('wheel', e => {
+                    e.preventDefault();
+                    const factor = e.deltaY < 0 ? 1.1 : 0.9;
+                    const rect = canvas.getBoundingClientRect();
+                    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+                    tx = mx - factor*(mx - tx);
+                    ty = my - factor*(my - ty);
+                    scale *= factor;
+                    draw();
+                });
+                // touch
+                canvas.addEventListener('touchstart', e => {
+                    if (e.touches.length === 1) { dragging = true; lastX = e.touches[0].clientX; lastY = e.touches[0].clientY; }
+                });
+                canvas.addEventListener('touchmove', e => {
+                    e.preventDefault();
+                    if (dragging && e.touches.length === 1) {
+                        tx += e.touches[0].clientX - lastX; ty += e.touches[0].clientY - lastY;
+                        lastX = e.touches[0].clientX; lastY = e.touches[0].clientY;
+                        draw();
+                    }
+                });
+                canvas.addEventListener('touchend', () => { dragging = false; });
 
-            // Tesseract vertices (16 points) in 4D coordinates (±1,±1,±1,±1)
-            const vertices4D = [];
-            for(let i=0; i<16; i++){
-                const bits = [(i>>3)&1, (i>>2)&1, (i>>1)&1, i&1].map(b => b*2-1);
-                vertices4D.push(new THREE.Vector4(bits[0], bits[1], bits[2], bits[3]));
-            }
-            // Edges: connect if differ in exactly one coordinate
-            const edges = [];
-            for(let i=0; i<16; i++){
-                for(let j=i+1; j<16; j++){
-                    const diff = [0,1,2,3].filter(k => vertices4D[i].getComponent(k) !== vertices4D[j].getComponent(k));
-                    if(diff.length === 1) edges.push([i,j]);
+                function draw() {
+                    ctx.clearRect(0,0,width,height);
+                    ctx.save();
+                    ctx.translate(tx, ty); ctx.scale(scale, scale);
+                    ctx.fillStyle = '#0f172a'; ctx.font = '12px Inter, sans-serif';
+                    ctx.fillText('Precomposition Obstruction', 20, 20);
+                    // nodes
+                    const nodes = [
+                        {x:100,y:100,label:'Δ'},{x:300,y:100,label:'Q(X×Y)'},
+                        {x:100,y:300,label:'QX⊗QY'},{x:300,y:300,label:'X×Y'}
+                    ];
+                    nodes.forEach(n => {
+                        ctx.beginPath(); ctx.arc(n.x, n.y, 10, 0, 2*Math.PI);
+                        ctx.fillStyle = '#2563eb'; ctx.fill();
+                        ctx.fillStyle = '#fff'; ctx.font='bold 10px Inter';
+                        ctx.fillText(n.label, n.x-8, n.y-12);
+                    });
+                    ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 2;
+                    ctx.beginPath(); ctx.moveTo(100,100); ctx.lineTo(300,100); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(100,100); ctx.lineTo(100,300); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(100,300); ctx.lineTo(300,300); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(300,100); ctx.lineTo(300,300); ctx.stroke();
+                    ctx.restore();
                 }
             }
-
-            // Create a line material
-            const lineMat = new THREE.LineBasicMaterial({color: '#2563eb'});
-            const points = []; // will be updated
-            const geometry = new THREE.BufferGeometry();
-            const positions = new Float32Array(edges.length * 2 * 3);
-            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            const lines = new THREE.LineSegments(geometry, lineMat);
-            scene.add(lines);
-
-            // Project from 4D to 3D with a rotation in the 4th dimension
-            function project4D(v4, angle) {
-                // rotate in yw plane
-                const y = v4.y;
-                const w = v4.w;
-                const cos = Math.cos(angle);
-                const sin = Math.sin(angle);
-                const ny = y * cos - w * sin;
-                const nw = y * sin + w * cos;
-                // perspective divide along w (simplified)
-                const scale = 1 / (3 + nw);
-                return new THREE.Vector3(v4.x * scale, ny * scale, v4.z * scale);
-            }
-
-            let angle = 0;
-            function animate4D() {
-                animateId = requestAnimationFrame(animate4D);
-                angle += 0.01;
-                const posArray = lines.geometry.attributes.position.array;
-                let idx = 0;
-                edges.forEach(([i,j]) => {
-                    const p1 = project4D(vertices4D[i], angle);
-                    const p2 = project4D(vertices4D[j], angle);
-                    posArray[idx++] = p1.x; posArray[idx++] = p1.y; posArray[idx++] = p1.z;
-                    posArray[idx++] = p2.x; posArray[idx++] = p2.y; posArray[idx++] = p2.z;
-                });
-                lines.geometry.attributes.position.needsUpdate = true;
-                lines.rotation.y += 0.005;
-                renderer.render(scene, camera);
-            }
-            animate4D();
-
-            window.addEventListener('resize', () => {
-                camera.aspect = container.clientWidth/container.clientHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(container.clientWidth, container.clientHeight);
-            });
+            setup2D('viz-2d-a');
+            setup2D('viz-2d-b');
         }
 
-        // Initialize the default view (1D) on page load
+        // ----- 3D visualizations (Three.js + OrbitControls) -----
+        function init3D() {
+            function createScene(containerId, geometryType) {
+                const container = document.getElementById(containerId);
+                container.innerHTML = '';
+                const scene = new THREE.Scene();
+                scene.background = new THREE.Color('#f8fafc');
+                const camera = new THREE.PerspectiveCamera(45, container.clientWidth/container.clientHeight, 0.1, 100);
+                camera.position.set(5,5,8);
+                const renderer = new THREE.WebGLRenderer({antialias: true});
+                renderer.setSize(container.clientWidth, container.clientHeight);
+                container.appendChild(renderer.domElement);
+                const controls = new THREE.OrbitControls(camera, renderer.domElement);
+                controls.enableDamping = true;
+                scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+                const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+                dirLight.position.set(1,1,1); scene.add(dirLight);
+                if (geometryType === 'site') {
+                    const grid = 3, sp = 2;
+                    const spheres = [];
+                    for (let i=0;i<grid;i++) for(let j=0;j<grid;j++){
+                        const s = new THREE.Mesh(new THREE.SphereGeometry(0.3,16,16), new THREE.MeshStandardMaterial({color:'#0f172a'}));
+                        s.position.set((i-1)*sp,0,(j-1)*sp); scene.add(s); spheres.push(s);
+                    }
+                    const columns = [];
+                    for (let i=0;i<grid;i++) for(let j=0;j<grid;j++){
+                        const group = new THREE.Group();
+                        for(let y=0;y<3;y++){
+                            const box = new THREE.Mesh(new THREE.BoxGeometry(0.4,0.4,0.4), new THREE.MeshStandardMaterial({color:'#2563eb'}));
+                            box.position.set((i-1)*sp, y*0.8+0.4, (j-1)*sp); group.add(box);
+                        }
+                        scene.add(group); columns.push({group, origY: group.children.map(c=>c.position.y)});
+                    }
+                    const btn = document.createElement('button'); btn.textContent='Apply Q'; btn.className='viz-tab';
+                    btn.style.position='absolute'; btn.style.bottom='10px'; btn.style.left='10px'; btn.style.zIndex='10';
+                    container.appendChild(btn);
+                    let applied = false;
+                    btn.addEventListener('click',()=>{
+                        applied=!applied;
+                        columns.forEach(col=>col.group.children.forEach((box,idx)=>box.position.y=applied?0:col.origY[idx]));
+                    });
+                } else if (geometryType === 'torus') {
+                    const curve = new THREE.TorusKnotGeometry(1.5,0.4,100,16);
+                    const mesh = new THREE.Mesh(curve, new THREE.MeshStandardMaterial({color:'#2563eb', roughness:0.4, metalness:0.2}));
+                    scene.add(mesh);
+                }
+                function animate() {
+                    const id = requestAnimationFrame(animate);
+                    controls.update();
+                    renderer.render(scene, camera);
+                    return id;
+                }
+                const animId = animate();
+                function cleanup() {
+                    cancelAnimationFrame(animId);
+                    renderer.dispose();
+                    scene.traverse(obj => { if (obj.geometry) obj.geometry.dispose(); if (obj.material) obj.material.dispose(); });
+                }
+                threeJSCleanups.push(cleanup);
+                window.addEventListener('resize', () => {
+                    camera.aspect = container.clientWidth/container.clientHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(container.clientWidth, container.clientHeight);
+                });
+            }
+            createScene('viz-3d-a', 'site');
+            createScene('viz-3d-b', 'torus');
+        }
+
+        // ----- 4D visualizations (tesseract with controls) -----
+        function init4D() {
+            function createTesseract(containerId, color) {
+                const container = document.getElementById(containerId);
+                container.innerHTML = '';
+                const scene = new THREE.Scene(); scene.background = new THREE.Color('#f8fafc');
+                const camera = new THREE.PerspectiveCamera(45, container.clientWidth/container.clientHeight, 0.1, 100);
+                camera.position.set(4,4,6);
+                const renderer = new THREE.WebGLRenderer({antialias: true});
+                renderer.setSize(container.clientWidth, container.clientHeight);
+                container.appendChild(renderer.domElement);
+                const controls = new THREE.OrbitControls(camera, renderer.domElement);
+                controls.enableDamping = true;
+                scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+                const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+                dirLight.position.set(1,1,1); scene.add(dirLight);
+                // 4D vertices
+                const verts4D = [];
+                for(let i=0;i<16;i++){ const b=[(i>>3)&1,(i>>2)&1,(i>>1)&1,i&1].map(v=>v*2-1); verts4D.push(new THREE.Vector4(b[0],b[1],b[2],b[3])); }
+                const edges = [];
+                for(let i=0;i<16;i++) for(let j=i+1;j<16;j++){
+                    const diff = [0,1,2,3].filter(k=>verts4D[i].getComponent(k)!==verts4D[j].getComponent(k));
+                    if(diff.length===1) edges.push([i,j]);
+                }
+                const lineGeo = new THREE.BufferGeometry();
+                const positions = new Float32Array(edges.length*2*3);
+                lineGeo.setAttribute('position', new THREE.BufferAttribute(positions,3));
+                const lines = new THREE.LineSegments(lineGeo, new THREE.LineBasicMaterial({color: color||'#2563eb'}));
+                scene.add(lines);
+                function project4D(v, angle) {
+                    const cos = Math.cos(angle), sin = Math.sin(angle);
+                    const y = v.y*cos - v.w*sin, w = v.y*sin + v.w*cos;
+                    const scale = 1/(3+w);
+                    return new THREE.Vector3(v.x*scale, y*scale, v.z*scale);
+                }
+                let angle = 0;
+                function animate() {
+                    const id = requestAnimationFrame(animate);
+                    angle += 0.005;
+                    const arr = lines.geometry.attributes.position.array;
+                    let idx=0;
+                    edges.forEach(([i,j])=>{
+                        const p1 = project4D(verts4D[i], angle), p2 = project4D(verts4D[j], angle);
+                        arr[idx++]=p1.x; arr[idx++]=p1.y; arr[idx++]=p1.z;
+                        arr[idx++]=p2.x; arr[idx++]=p2.y; arr[idx++]=p2.z;
+                    });
+                    lines.geometry.attributes.position.needsUpdate = true;
+                    controls.update();
+                    renderer.render(scene, camera);
+                    return id;
+                }
+                const animId = animate();
+                function cleanup() {
+                    cancelAnimationFrame(animId);
+                    renderer.dispose();
+                    scene.traverse(obj => { if (obj.geometry) obj.geometry.dispose(); if (obj.material) obj.material.dispose(); });
+                }
+                threeJSCleanups.push(cleanup);
+                window.addEventListener('resize', () => {
+                    camera.aspect = container.clientWidth/container.clientHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(container.clientWidth, container.clientHeight);
+                });
+            }
+            createTesseract('viz-4d-a', '#2563eb');
+            createTesseract('viz-4d-b', '#dc2626');
+        }
+
+        // Initialise the default dimension
         init1D();
+    })();
     </script>
 </body>
 </html>
