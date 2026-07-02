@@ -1,10 +1,17 @@
 /* ===== Reset & Base ===== */
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior:smooth; }
+:root{
+    --accent: #2563eb; /* primary blue */
+    --muted: #94a3b8;
+    --bg: #f9fafb;
+    --panel: #ffffff;
+    --text: #1e1e1e;
+}
 body {
     font-family: 'EB Garamond', 'Georgia', serif;
-    background: #f9fafb;
-    color: #1e1e1e;
+    background: var(--bg);
+    color: var(--text);
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
@@ -27,7 +34,7 @@ h2 {
 h3 { font-size: 1.25rem; margin-bottom: 0.7rem; }
 p  { margin-bottom: 1rem; font-size: 1.05rem; color: #334155; }
 a  {
-    color: #2563eb;
+    color: var(--accent);
     text-decoration: none;
     transition: color 0.2s, border-bottom 0.2s;
     border-bottom: 1px solid transparent;
@@ -53,7 +60,7 @@ nav a {
 nav a::after {
     content: "";
     position: absolute; bottom: -4px; left: 0; width: 0; height: 1.5px;
-    background: #60a5fa; transition: width 0.2s;
+    background: var(--accent); transition: width 0.2s;
 }
 nav a:hover { color: #fff; }
 nav a:hover::after { width: 100%; }
@@ -101,7 +108,7 @@ section { margin-bottom: 3.5rem; }
     margin: 2.2rem 0;
     border: 1px solid #e2e8f0;
     border-radius: 10px;
-    background: #fff;
+    background: var(--panel);
     overflow: hidden;
     transition: box-shadow 0.25s, border-color 0.25s;
 }
@@ -123,7 +130,6 @@ section { margin-bottom: 3.5rem; }
     align-items: center;
     gap: 0.7rem;
 }
-/* custom arrow */
 .explain-summary::before {
     content: "";
     display: inline-block;
@@ -143,12 +149,12 @@ details[open] .explain-summary::before {
     font-size: 1.05rem;
     color: #334155;
 }
-.explain-plain { border-left: 4px solid #2563eb; }
+.explain-plain { border-left: 4px solid var(--accent); }
 .explain-technical { border-left: 4px solid #475569; }
 
 /* ===== Cards ===== */
 .card {
-    background: #fff;
+    background: var(--panel);
     border: 1px solid #e2e8f0;
     border-radius: 10px;
     padding: 2rem;
@@ -167,12 +173,12 @@ footer {
     text-align: center;
     padding: 2.8rem 2rem;
     font-size: 0.88rem;
-    color: #94a3b8;
+    color: var(--muted);
     border-top: 1px solid #e2e8f0;
     margin-top: 3.5rem;
-    background: #fff;
+    background: var(--panel);
 }
-footer a { color: #94a3b8; border-bottom: none; }
+footer a { color: var(--muted); border-bottom: none; }
 footer a:hover { color: #64748b; }
 
 /* ===== Animations ===== */
