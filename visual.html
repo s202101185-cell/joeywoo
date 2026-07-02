@@ -24,26 +24,13 @@
             font-family: 'EB Garamond', serif;
             background: #f9fafb;
             color: #1e1e1e;
-            transition: background 0.4s, color 0.4s;
-            -webkit-font-smoothing: antialiased;
+            transition: background 0.3s, color 0.3s;
         }
-        body.dark-mode {
-            background: var(--dark-bg);
-            color: var(--dark-text);
-        }
-        body.dark-mode .viz-container {
-            background: #1e293b;
-            border-color: #334155;
-        }
-        body.dark-mode .viz-tab {
-            background: #334155;
-            border-color: #475569;
-            color: #cbd5e1;
-        }
-        body.dark-mode .viz-tab.active {
-            background: var(--accent);
-            color: #fff;
-        }
+        body.dark-mode { background: var(--dark-bg); color: var(--dark-text); }
+        body.dark-mode .viz-container { background: #1e293b; border-color: #334155; }
+        body.dark-mode .viz-tab { background: #334155; border-color: #475569; color: #cbd5e1; }
+        body.dark-mode .viz-tab.active { background: var(--accent); color: #fff; }
+        body.dark-mode footer { background: #1e293b; color: #94a3b8; }
         .viz-container {
             position: relative;
             width: 100%;
@@ -54,8 +41,7 @@
             overflow: hidden;
             background: var(--card-bg);
             box-shadow: var(--shadow-sm);
-            transition: box-shadow 0.2s, background 0.4s, border-color 0.4s;
-            will-change: transform;
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.2s;
         }
         .viz-container:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
         .viz-row { display: flex; gap: 1.5rem; flex-wrap: wrap; }
@@ -77,10 +63,7 @@
         .viz-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
         canvas { display: block; width: 100%; height: 100%; }
         .explain-collapse { margin: 0.8rem 0; }
-        .explain-collapse summary {
-            font-weight: 600; cursor: pointer; outline: none;
-            transition: color 0.2s;
-        }
+        .explain-collapse summary { font-weight: 600; cursor: pointer; outline: none; transition: color 0.2s; }
         .explain-collapse summary:hover { color: var(--accent); }
 
         /* Diamond button */
@@ -95,32 +78,17 @@
             border-radius: 4px;
             transform: rotate(45deg);
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             font-size: 1.2rem;
             box-shadow: 0 4px 8px rgba(0,0,0,0.08);
-            transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+            transition: background 0.2s, box-shadow 0.2s;
             outline: none;
         }
         .diamond-btn span { display: block; transform: rotate(-45deg); font-weight: bold; }
         .diamond-btn:hover { background: var(--accent-hover); box-shadow: 0 6px 12px rgba(0,0,0,0.12); }
         .diamond-btn.applied { background: #dc2626; }
 
-        /* Ripple ring */
-        .ripple-ring {
-            position: absolute;
-            bottom: 16px; left: 16px;
-            width: 0; height: 0;
-            border-radius: 50%;
-            background: transparent;
-            border: 2px solid var(--accent);
-            pointer-events: none;
-            z-index: 8;
-            opacity: 0;
-        }
-
-        /* custom range slider */
+        /* Custom range slider */
         input[type=range].custom-slider {
             -webkit-appearance: none; appearance: none;
             width: 120px; height: 4px;
@@ -132,9 +100,7 @@
             width: 14px; height: 14px; border-radius: 50%;
             background: var(--accent); cursor: pointer;
             box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-            transition: transform 0.15s;
         }
-        input[type=range].custom-slider::-webkit-slider-thumb:hover { transform: scale(1.1); }
 
         /* Tooltip */
         .viz-tooltip {
@@ -152,6 +118,20 @@
             white-space: nowrap;
         }
         .viz-tooltip.visible { opacity: 1; }
+
+        /* Ripple ring */
+        .ripple-ring {
+            position: absolute;
+            bottom: 16px; left: 16px;
+            width: 0; height: 0;
+            border-radius: 50%;
+            background: transparent;
+            border: 2px solid var(--accent);
+            pointer-events: none;
+            z-index: 8;
+            opacity: 0;
+            transition: all 0.6s ease-out;
+        }
 
         /* Sketch controls */
         .sketch-controls {
@@ -182,37 +162,60 @@
 
         /* Dark mode toggle */
         .dark-mode-toggle {
-            position: fixed;
-            bottom: 20px; right: 20px;
-            z-index: 1000;
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            border-radius: 50%;
-            width: 40px; height: 40px;
-            cursor: pointer;
+            position: fixed; bottom: 20px; right: 20px; z-index: 1000;
+            background: var(--accent); color: #fff; border: none;
+            border-radius: 50%; width: 40px; height: 40px; cursor: pointer;
             display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            font-size: 1.2rem;
+            font-size: 1.2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             transition: transform 0.2s, background 0.2s;
         }
         .dark-mode-toggle:hover { transform: scale(1.05); }
 
         /* Panel crossfade */
         .panel-container {
-            transition: opacity 0.35s ease;
+            transition: opacity 0.25s ease;
         }
         .panel-container.fading { opacity: 0; }
+
+        /* Tour overlay */
+        .tour-overlay {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: rgba(15,23,42,0.9);
+            color: #f1f5f9;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            z-index: 1001;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tour-overlay.active { opacity: 1; }
+
+        /* Particle canvas */
+        #particle-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
     </style>
     <!-- MathJax -->
     <script>
         MathJax = {
-            tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']], processEscapes: true }
+            tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']], processEscapes: true },
+            startup: { ready: () => { MathJax.startup.defaultReady(); } }
         };
     </script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
 </head>
 <body>
+    <canvas id="particle-canvas"></canvas>
+
     <nav>
         <a href="index.html">Home</a>
         <a href="research.html">Research</a>
@@ -239,7 +242,7 @@
             <button class="viz-tab" data-dim="4d">4D · Tesseract</button>
         </div>
 
-        <!-- 1D panels -->
+        <!-- 1D -->
         <div class="panel-container" id="panel-1d">
             <div class="viz-row">
                 <div class="viz-col">
@@ -267,7 +270,7 @@
             </div>
         </div>
 
-        <!-- 2D panels -->
+        <!-- 2D -->
         <div class="panel-container" id="panel-2d" style="display:none;">
             <div class="viz-row">
                 <div class="viz-col">
@@ -295,7 +298,7 @@
             </div>
         </div>
 
-        <!-- 3D panels -->
+        <!-- 3D -->
         <div class="panel-container" id="panel-3d" style="display:none;">
             <div class="viz-row">
                 <div class="viz-col">
@@ -323,7 +326,7 @@
             </div>
         </div>
 
-        <!-- 4D panels -->
+        <!-- 4D -->
         <div class="panel-container" id="panel-4d" style="display:none;">
             <div class="viz-row">
                 <div class="viz-col">
@@ -360,28 +363,88 @@
     </footer>
 
     <button class="dark-mode-toggle" id="darkToggle" aria-label="Toggle dark mode">🌓</button>
+    <div class="tour-overlay" id="tourOverlay"></div>
 
     <!-- Three.js & OrbitControls -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.126.0/build/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.126.0/examples/js/controls/OrbitControls.js"></script>
+    <!-- Post‑processing for bloom -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.126.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.126.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.126.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
     <script src="assets/js/ai-enhancer.js" defer></script>
 
     <script>
     (function() {
-        // ---- High-DPI canvas helper ----
-        function setupHiDPI(canvas, ctx) {
-            const dpr = window.devicePixelRatio || 1;
-            const rect = canvas.parentElement.getBoundingClientRect();
-            canvas.width = rect.width * dpr;
-            canvas.height = rect.height * dpr;
-            canvas.style.width = rect.width + 'px';
-            canvas.style.height = rect.height + 'px';
-            ctx.setTransform(1,0,0,1,0,0); // reset transform
-            ctx.scale(dpr, dpr);
-            return { width: rect.width, height: rect.height, dpr };
+        /* ========== GLOBAL STATE & UTILITIES ========== */
+        let audioCtx = null;
+        function initAudio() {
+            if (audioCtx) return;
+            try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
+        }
+        function playTone(freq, duration, type='sine', vol=0.05) {
+            if (!audioCtx) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e) {}
+        }
+        function vibrate(ms = 10) {
+            if (navigator.vibrate) navigator.vibrate(ms);
         }
 
-        // ---- Dark mode ----
+        /* ========== DARK MATTER PARTICLES ========== */
+        const particleCanvas = document.getElementById('particle-canvas');
+        const pCtx = particleCanvas.getContext('2d');
+        let particles = [];
+        function initParticles() {
+            particleCanvas.width = window.innerWidth;
+            particleCanvas.height = window.innerHeight;
+            particles = [];
+            for (let i=0; i<80; i++) {
+                particles.push({
+                    x: Math.random() * particleCanvas.width,
+                    y: Math.random() * particleCanvas.height,
+                    vx: (Math.random() - 0.5) * 0.2,
+                    vy: (Math.random() - 0.5) * 0.2,
+                    r: Math.random() * 2 + 1
+                });
+            }
+        }
+        function drawParticles() {
+            pCtx.clearRect(0,0,particleCanvas.width, particleCanvas.height);
+            const color = document.body.classList.contains('dark-mode') ? 'rgba(148,163,184,0.3)' : 'rgba(203,213,225,0.4)';
+            pCtx.fillStyle = color;
+            particles.forEach(p => {
+                pCtx.beginPath();
+                pCtx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+                pCtx.fill();
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.x < 0) p.x = particleCanvas.width;
+                if (p.x > particleCanvas.width) p.x = 0;
+                if (p.y < 0) p.y = particleCanvas.height;
+                if (p.y > particleCanvas.height) p.y = 0;
+            });
+            requestAnimationFrame(drawParticles);
+        }
+        initParticles();
+        drawParticles();
+        window.addEventListener('resize', () => {
+            particleCanvas.width = window.innerWidth;
+            particleCanvas.height = window.innerHeight;
+            initParticles();
+        });
+
+        /* ========== DARK MODE ========== */
         const darkToggle = document.getElementById('darkToggle');
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         if (localStorage.getItem('darkMode') === 'true' || (!localStorage.getItem('darkMode') && prefersDark)) {
@@ -394,7 +457,7 @@
             darkToggle.textContent = isDark ? '☀️' : '🌓';
         });
 
-        // ---- Tab switching with crossfade ----
+        /* ========== TAB SWITCHING WITH CROSSFADE ========== */
         const dimTabs = document.querySelectorAll('#dim-tabs .viz-tab');
         const panels = {
             '1d': document.getElementById('panel-1d'),
@@ -403,30 +466,28 @@
             '4d': document.getElementById('panel-4d')
         };
         let activeDim = '1d';
-        let threeJSCleanups = [];
+        let cleanupFns = [];
         let isSwitching = false;
 
         function switchDim(dim) {
             if (dim === activeDim || isSwitching) return;
+            initAudio();
             isSwitching = true;
             const oldPanel = panels[activeDim];
             const newPanel = panels[dim];
 
-            // Fade out old
             oldPanel.classList.add('fading');
             setTimeout(() => {
                 oldPanel.style.display = 'none';
                 oldPanel.classList.remove('fading');
 
-                // Fade in new
                 newPanel.style.display = 'block';
                 newPanel.classList.add('fading');
-                requestAnimationFrame(() => {
-                    newPanel.classList.remove('fading');
-                });
+                requestAnimationFrame(() => newPanel.classList.remove('fading'));
 
-                threeJSCleanups.forEach(fn => fn());
-                threeJSCleanups = [];
+                cleanupFns.forEach(fn => fn());
+                cleanupFns = [];
+
                 dimTabs.forEach(t => t.classList.remove('active'));
                 document.querySelector(`#dim-tabs .viz-tab[data-dim="${dim}"]`).classList.add('active');
                 activeDim = dim;
@@ -444,26 +505,66 @@
         }
         dimTabs.forEach(tab => tab.addEventListener('click', () => switchDim(tab.dataset.dim)));
 
-        // Keyboard shortcuts
         document.addEventListener('keydown', e => {
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
             const dim = { '1':'1d', '2':'2d', '3':'3d', '4':'4d' }[e.key];
             if (dim) switchDim(dim);
         });
 
-        // Diamond button helper
+        /* ========== GUIDED TOUR ========== */
+        const tourOverlay = document.getElementById('tourOverlay');
+        const tourSequence = [
+            { dim: '1d', text: '1D Spectrum: drag points to see classical collapse' },
+            { dim: '2d', text: '2D Obstruction: pinch‑zoom and toggle the diamond' },
+            { dim: '3d', text: '3D Quantum Site: click ◆ to project quantum states' },
+            { dim: '4d', text: '4D Tesseract: rotate to hear the distributive law' }
+        ];
+        let tourInterval = null;
+        function startTour() {
+            if (tourInterval) return;
+            initAudio();
+            let step = 0;
+            function show(step) {
+                if (step >= tourSequence.length) {
+                    clearInterval(tourInterval);
+                    tourInterval = null;
+                    tourOverlay.classList.remove('active');
+                    return;
+                }
+                const { dim, text } = tourSequence[step];
+                switchDim(dim);
+                tourOverlay.textContent = text;
+                tourOverlay.classList.add('active');
+            }
+            show(0);
+            tourInterval = setInterval(() => {
+                step++;
+                show(step);
+            }, 4000);
+        }
+        const tourBtn = document.createElement('button');
+        tourBtn.textContent = 'Tour';
+        tourBtn.className = 'viz-tab';
+        tourBtn.style.marginLeft = '0.5rem';
+        tourBtn.addEventListener('click', startTour);
+        document.getElementById('dim-tabs').appendChild(tourBtn);
+
+        /* ========== HELPERS ========== */
         function createDiamondBtn(parent, onClick) {
             const btn = document.createElement('button');
             btn.className = 'diamond-btn';
             const span = document.createElement('span');
             span.textContent = '◆';
             btn.appendChild(span);
-            btn.addEventListener('click', onClick);
+            btn.addEventListener('click', () => {
+                initAudio();
+                onClick();
+                vibrate();
+            });
             parent.appendChild(btn);
             return btn;
         }
 
-        // ---- Ripple effect helper ----
         function triggerRipple(container, x, y) {
             const ripple = document.createElement('div');
             ripple.className = 'ripple-ring';
@@ -479,7 +580,7 @@
             ripple.addEventListener('transitionend', () => ripple.remove());
         }
 
-        // ========== 1D (spring physics, high-DPI, ripple) ==========
+        /* ========== 1D SPECTRUM ========== */
         function init1D() {
             function initSpectrum(containerId, type) {
                 const container = document.getElementById(containerId);
@@ -491,29 +592,74 @@
                 tooltip.className = 'viz-tooltip';
                 container.appendChild(tooltip);
 
-                let w, h;
-                const resize = () => {
-                    const dims = setupHiDPI(canvas, ctx);
-                    w = dims.width; h = dims.height;
+                const glowCanvas = document.createElement('canvas');
+                glowCanvas.style.position = 'absolute'; glowCanvas.style.top = '0'; glowCanvas.style.left = '0';
+                glowCanvas.style.width = '100%'; glowCanvas.style.height = '100%';
+                glowCanvas.style.pointerEvents = 'none';
+                glowCanvas.style.filter = 'blur(4px)';
+                glowCanvas.style.opacity = '0.7';
+                container.appendChild(glowCanvas);
+                const glowCtx = glowCanvas.getContext('2d');
+
+                let w, h, points = [], animFrame = null;
+                const spring = { stiffness: 0.025, damping: 0.82 };
+
+                function resize() {
+                    const rect = container.getBoundingClientRect();
+                    const dpr = window.devicePixelRatio || 1;
+                    w = rect.width; h = rect.height;
+                    canvas.width = w * dpr;
+                    canvas.height = h * dpr;
+                    canvas.style.width = w + 'px';
+                    canvas.style.height = h + 'px';
+                    ctx.setTransform(1,0,0,1,0,0);
+                    ctx.scale(dpr, dpr);
+                    glowCanvas.width = canvas.width;
+                    glowCanvas.height = canvas.height;
+                    glowCanvas.style.width = w + 'px';
+                    glowCanvas.style.height = h + 'px';
+                    glowCtx.setTransform(1,0,0,1,0,0);
+                    glowCtx.scale(dpr, dpr);
+                    if (type === 'collapse') {
+                        points.forEach((p, idx) => {
+                            p.baseX = w * (0.1 + 0.12 * idx);
+                            p.targetX = p.collapsed ? w/2 : p.baseX;
+                        });
+                    } else {
+                        const slider = container.querySelector('input[type=range]');
+                        if (slider) {
+                            const s = parseFloat(slider.value);
+                            points = [];
+                            for (let i=0; i<9; i++) {
+                                const baseX = w * (0.1 + 0.1*i);
+                                points.push({ baseX, x: baseX + (w/2 - baseX)*s, vx:0, targetX: baseX + (w/2 - baseX)*s, label: i });
+                            }
+                        }
+                    }
                     draw();
-                };
+                }
                 window.addEventListener('resize', resize);
                 resize();
 
-                let points = [];
-                let animFrame = null;
-                const spring = { stiffness: 0.025, damping: 0.82 };
-
                 if (type === 'collapse') {
                     const numPts = 7;
-                    for (let i = 0; i < numPts; i++) {
-                        const baseX = w * (0.1 + 0.12 * i);
-                        points.push({ baseX, x: baseX, vx: 0, targetX: baseX, collapsed: false, label: `p${i}` });
+                    for (let i=0; i<numPts; i++) {
+                        const baseX = w * (0.1 + 0.12*i);
+                        points.push({ baseX, x: baseX, vx:0, targetX: baseX, collapsed: false, label: `p${i}` });
                     }
                     const btn = createDiamondBtn(container, () => {
                         points.forEach(p => { p.collapsed = !p.collapsed; p.targetX = p.collapsed ? w/2 : p.baseX; });
                         if (!animFrame) animate();
                         triggerRipple(container, 16, 16);
+                        if (points[0].collapsed) {
+                            playTone(220, 0.3, 'sine', 0.08);
+                            setTimeout(() => playTone(330, 0.3, 'sine', 0.08), 100);
+                            setTimeout(() => playTone(440, 0.4, 'sine', 0.08), 200);
+                        } else {
+                            playTone(440, 0.2, 'triangle', 0.05);
+                            setTimeout(() => playTone(330, 0.2, 'triangle', 0.05), 80);
+                            setTimeout(() => playTone(220, 0.2, 'triangle', 0.05), 160);
+                        }
                     });
                 } else {
                     const slider = document.createElement('input');
@@ -523,9 +669,9 @@
                     const update = () => {
                         const s = parseFloat(slider.value);
                         points = [];
-                        for (let i = 0; i < 9; i++) {
-                            const baseX = w * (0.1 + 0.1 * i);
-                            points.push({ baseX, x: baseX, vx: 0, targetX: baseX + (w/2 - baseX) * s, label: i });
+                        for (let i=0; i<9; i++) {
+                            const baseX = w * (0.1 + 0.1*i);
+                            points.push({ baseX, x: baseX + (w/2 - baseX)*s, vx:0, targetX: baseX + (w/2 - baseX)*s, label: i });
                         }
                         draw();
                     };
@@ -549,24 +695,22 @@
 
                 let draggingIdx = -1;
                 function hitTest(mx, my) {
-                    for (let i = 0; i < points.length; i++) {
+                    for (let i=0; i<points.length; i++) {
                         const dx = mx - points[i].x, dy = my - h/2;
-                        if (Math.sqrt(dx*dx + dy*dy) < 16) return i;
+                        if (Math.sqrt(dx*dx+dy*dy) < 16) return i;
                     }
                     return -1;
                 }
 
                 canvas.addEventListener('mousedown', e => {
                     const rect = canvas.getBoundingClientRect();
-                    const mx = (e.clientX - rect.left);
-                    const my = (e.clientY - rect.top);
+                    const mx = (e.clientX - rect.left), my = (e.clientY - rect.top);
                     const idx = hitTest(mx, my);
-                    if (idx >= 0) { draggingIdx = idx; points[idx].targetX = points[idx].x; points[idx].vx = 0; }
+                    if (idx >= 0) { draggingIdx = idx; points[idx].targetX = points[idx].x; points[idx].vx = 0; vibrate(5); }
                 });
                 canvas.addEventListener('mousemove', e => {
                     const rect = canvas.getBoundingClientRect();
-                    const mx = (e.clientX - rect.left);
-                    const my = (e.clientY - rect.top);
+                    const mx = (e.clientX - rect.left), my = (e.clientY - rect.top);
                     const idx = hitTest(mx, my);
                     if (draggingIdx >= 0) {
                         points[draggingIdx].x = mx;
@@ -578,7 +722,7 @@
                         tooltip.classList.add('visible');
                         tooltip.style.left = (mx + 12) + 'px';
                         tooltip.style.top = (my - 28) + 'px';
-                        tooltip.textContent = points[idx].label;
+                        tooltip.textContent = points[idx].label || idx;
                     } else {
                         canvas.style.cursor = 'default';
                         tooltip.classList.remove('visible');
@@ -589,10 +733,9 @@
                 canvas.addEventListener('touchstart', e => {
                     e.preventDefault();
                     const rect = canvas.getBoundingClientRect();
-                    const mx = (e.touches[0].clientX - rect.left);
-                    const my = (e.touches[0].clientY - rect.top);
+                    const mx = (e.touches[0].clientX - rect.left), my = (e.touches[0].clientY - rect.top);
                     const idx = hitTest(mx, my);
-                    if (idx >= 0) { draggingIdx = idx; points[idx].targetX = points[idx].x; points[idx].vx = 0; }
+                    if (idx >= 0) { draggingIdx = idx; points[idx].targetX = points[idx].x; points[idx].vx = 0; vibrate(5); }
                 });
                 canvas.addEventListener('touchmove', e => {
                     e.preventDefault();
@@ -607,36 +750,31 @@
                 function draw() {
                     const isDark = document.body.classList.contains('dark-mode');
                     ctx.clearRect(0, 0, w, h);
+                    glowCtx.clearRect(0, 0, w, h);
                     ctx.fillStyle = isDark ? '#1e293b' : '#f9fafb';
                     ctx.fillRect(0, 0, w, h);
-                    ctx.strokeStyle = isDark ? '#334155' : '#e2e8f0';
-                    ctx.lineWidth = 0.5;
-                    for (let x = 0; x < w; x += 30) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
-                    for (let y = 0; y < h; y += 30) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
-
                     ctx.beginPath();
-                    ctx.moveTo(40, h/2); ctx.lineTo(w - 40, h/2);
-                    ctx.strokeStyle = isDark ? '#475569' : '#94a3b8';
-                    ctx.lineWidth = 1.5; ctx.stroke();
-
+                    ctx.moveTo(40, h/2); ctx.lineTo(w-40, h/2);
+                    ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 2; ctx.stroke();
                     points.forEach(p => {
                         ctx.beginPath();
-                        ctx.arc(p.x, h/2, 7, 0, 2 * Math.PI);
+                        ctx.arc(p.x, h/2, 7, 0, 2*Math.PI);
                         const grad = ctx.createRadialGradient(p.x, h/2, 2, p.x, h/2, 8);
                         grad.addColorStop(0, '#93c5fd'); grad.addColorStop(1, '#1e40af');
                         ctx.fillStyle = grad; ctx.fill();
                         ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5; ctx.stroke();
+                        glowCtx.beginPath();
+                        glowCtx.arc(p.x, h/2, 7, 0, 2*Math.PI);
+                        glowCtx.fillStyle = '#93c5fd';
+                        glowCtx.fill();
                     });
-                    ctx.fillStyle = isDark ? '#cbd5e1' : '#334155';
-                    ctx.font = '12px Inter, sans-serif';
-                    ctx.fillText(type === 'collapse' ? 'Spectrum collapse' : 'Spectrum spread', 60, 30);
                 }
             }
             initSpectrum('viz-1d-a', 'collapse');
             initSpectrum('viz-1d-b', 'spread');
         }
 
-        // ========== 2D (HTML overlays, high-DPI) ==========
+        /* ========== 2D OBSTRUCTION + SKETCH ========== */
         function init2D() {
             function setupObstruction(containerId) {
                 const container = document.getElementById(containerId);
@@ -644,8 +782,8 @@
                 const canvas = document.createElement('canvas');
                 container.appendChild(canvas);
                 const ctx = canvas.getContext('2d');
-                let w, h, tx = 0, ty = 0, scale = 1;
-                let collapsed = false;
+                let w, h, tx = 0, ty = 0, scale = 1, collapsed = false;
+                let pulseAnimId = null;
 
                 const overlay = document.createElement('div');
                 overlay.style.position = 'absolute'; overlay.style.top = '0'; overlay.style.left = '0';
@@ -653,12 +791,19 @@
                 overlay.style.pointerEvents = 'none'; overlay.style.zIndex = '12';
                 container.appendChild(overlay);
 
-                const resize = () => {
-                    const dims = setupHiDPI(canvas, ctx);
-                    w = dims.width; h = dims.height;
+                function resize() {
+                    const rect = container.getBoundingClientRect();
+                    const dpr = window.devicePixelRatio || 1;
+                    w = rect.width; h = rect.height;
+                    canvas.width = w * dpr;
+                    canvas.height = h * dpr;
+                    canvas.style.width = w + 'px';
+                    canvas.style.height = h + 'px';
+                    ctx.setTransform(1,0,0,1,0,0);
+                    ctx.scale(dpr, dpr);
                     draw();
                     updateOverlays();
-                };
+                }
                 window.addEventListener('resize', resize);
                 resize();
 
@@ -666,24 +811,25 @@
                     collapsed = !collapsed;
                     draw(); updateOverlays();
                     triggerRipple(container, 16, 16);
+                    playTone(440, 0.15, 'square', 0.05);
                 });
 
                 let dragging = false, lastX, lastY;
-                canvas.addEventListener('mousedown', e => { dragging = true; lastX = e.clientX; lastY = e.clientY; });
+                canvas.addEventListener('mousedown', e => { dragging=true; lastX=e.clientX; lastY=e.clientY; });
                 canvas.addEventListener('mousemove', e => {
                     if (!dragging) return;
                     tx += e.clientX - lastX; ty += e.clientY - lastY;
                     lastX = e.clientX; lastY = e.clientY;
                     draw(); updateOverlays();
                 });
-                canvas.addEventListener('mouseup', () => { dragging = false; });
+                canvas.addEventListener('mouseup', () => { dragging=false; });
                 canvas.addEventListener('wheel', e => {
                     e.preventDefault();
                     const factor = e.deltaY < 0 ? 1.1 : 0.9;
                     const rect = canvas.getBoundingClientRect();
                     const mx = e.clientX - rect.left, my = e.clientY - rect.top;
-                    tx = mx - factor * (mx - tx);
-                    ty = my - factor * (my - ty);
+                    tx = mx - factor*(mx - tx);
+                    ty = my - factor*(my - ty);
                     scale *= factor;
                     draw(); updateOverlays();
                 });
@@ -691,41 +837,48 @@
                 function updateOverlays() {
                     overlay.innerHTML = '';
                     const nodes = [
-                        { x: 100, y: 100, label: 'Δ' },
-                        { x: 300, y: 100, label: collapsed ? 'X×Y' : 'Q(X×Y)' },
-                        { x: 100, y: 300, label: 'QX⊗QY' },
-                        { x: 300, y: 300, label: collapsed ? 'X×Y/Q(X×Y)' : 'X×Y' }
+                        { x:100, y:100, label:'\\Delta' },
+                        { x:300, y:100, label: collapsed ? 'X\\times Y' : 'Q(X\\times Y)' },
+                        { x:100, y:300, label:'QX\\otimes QY' },
+                        { x:300, y:300, label: collapsed ? 'X\\times Y / Q(X\\times Y)' : 'X\\times Y' }
                     ];
                     nodes.forEach(n => {
-                        const screenX = n.x * scale + tx;
-                        const screenY = n.y * scale + ty;
+                        const sx = n.x * scale + tx, sy = n.y * scale + ty;
                         const div = document.createElement('div');
                         div.className = 'overlay-node';
-                        div.style.left = screenX + 'px';
-                        div.style.top = screenY + 'px';
-                        div.textContent = n.label;
+                        div.style.left = sx + 'px';
+                        div.style.top = sy + 'px';
+                        div.innerHTML = '\\(' + n.label + '\\)';
                         overlay.appendChild(div);
                     });
+                    if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
+                        MathJax.typesetPromise([overlay]);
+                    }
                 }
+
+                let pulse = 0;
+                function pulseArrows() {
+                    pulse += 0.02;
+                    draw();
+                    pulseAnimId = requestAnimationFrame(pulseArrows);
+                }
+                pulseArrows();
 
                 function draw() {
                     const isDark = document.body.classList.contains('dark-mode');
-                    ctx.clearRect(0, 0, w, h);
+                    ctx.clearRect(0,0,w,h);
                     ctx.fillStyle = isDark ? '#1e293b' : '#f9fafb';
-                    ctx.fillRect(0, 0, w, h);
-                    ctx.strokeStyle = isDark ? '#334155' : '#e2e8f0';
-                    ctx.lineWidth = 0.5;
-                    for (let x = 0; x < w; x += 30) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
-                    for (let y = 0; y < h; y += 30) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
-
+                    ctx.fillRect(0,0,w,h);
                     ctx.save(); ctx.translate(tx, ty); ctx.scale(scale, scale);
-                    const tL = {x:100, y:100};
-                    const tR = {x:300, y:100};
-                    const bL = {x:100, y:300};
-                    const bR = {x:300, y:300};
                     function arrow(x1,y1,x2,y2) {
+                        const intensity = 0.5 + 0.5 * Math.sin(pulse * 5 + (x1+y1));
+                        const r = 71 + Math.floor(40 * intensity);
+                        const g = 85 + Math.floor(40 * intensity);
+                        const b = 105;
                         ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
-                        ctx.strokeStyle = '#475569'; ctx.lineWidth = 1.5; ctx.stroke();
+                        ctx.strokeStyle = `rgb(${r},${g},${b})`;
+                        ctx.lineWidth = 1.5 + 0.5 * Math.sin(pulse * 5);
+                        ctx.stroke();
                         const angle = Math.atan2(y2-y1, x2-x1);
                         const len = 6;
                         ctx.beginPath();
@@ -733,12 +886,12 @@
                         ctx.lineTo(x2 - len*Math.cos(angle - Math.PI/6), y2 - len*Math.sin(angle - Math.PI/6));
                         ctx.lineTo(x2 - len*Math.cos(angle + Math.PI/6), y2 - len*Math.sin(angle + Math.PI/6));
                         ctx.closePath();
-                        ctx.fillStyle = '#475569'; ctx.fill();
+                        ctx.fillStyle = `rgb(${r},${g},${b})`;
+                        ctx.fill();
                     }
-                    arrow(100,100, 300,100);
-                    arrow(100,100, 100,300);
-                    arrow(100,300, 300,300);
-                    if (!collapsed) arrow(300,100, 300,300);
+                    arrow(100,100,300,100); arrow(100,100,100,300);
+                    arrow(100,300,300,300);
+                    if (!collapsed) arrow(300,100,300,300);
                     ctx.restore();
                 }
             }
@@ -749,10 +902,7 @@
                 const canvas = document.createElement('canvas');
                 container.appendChild(canvas);
                 const ctx = canvas.getContext('2d');
-                let w, h;
-                let strokes = [];
-                let currentStroke = [];
-                let drawing = false;
+                let w, h, strokes = [], currentStroke = [], drawing = false;
 
                 const controlsDiv = document.createElement('div');
                 controlsDiv.className = 'sketch-controls';
@@ -761,61 +911,97 @@
                 controlsDiv.appendChild(clearBtn); controlsDiv.appendChild(undoBtn);
                 container.appendChild(controlsDiv);
 
-                const resize = () => {
-                    const dims = setupHiDPI(canvas, ctx);
-                    w = dims.width; h = dims.height;
-                    redrawBackground();
-                };
+                function resize() {
+                    const rect = container.getBoundingClientRect();
+                    const dpr = window.devicePixelRatio || 1;
+                    w = rect.width; h = rect.height;
+                    canvas.width = w * dpr;
+                    canvas.height = h * dpr;
+                    canvas.style.width = w + 'px';
+                    canvas.style.height = h + 'px';
+                    ctx.setTransform(1,0,0,1,0,0);
+                    ctx.scale(dpr, dpr);
+                    redraw();
+                }
                 window.addEventListener('resize', resize);
                 resize();
 
-                function redrawBackground() {
+                function redraw() {
                     const isDark = document.body.classList.contains('dark-mode');
+                    ctx.clearRect(0,0,w,h);
                     ctx.fillStyle = isDark ? '#1e293b' : '#f9fafb';
-                    ctx.fillRect(0, 0, w, h);
-                    ctx.strokeStyle = isDark ? '#334155' : '#e2e8f0';
-                    ctx.lineWidth = 0.5;
-                    for (let x = 0; x < w; x += 30) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
-                    for (let y = 0; y < h; y += 30) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+                    ctx.fillRect(0,0,w,h);
                     ctx.fillStyle = isDark ? '#cbd5e1' : '#475569';
-                    ctx.font = '12px Inter, sans-serif';
-                    ctx.fillText('Sketch your own obstruction (draw with mouse/touch)', 20, 30);
+                    ctx.font = '14px Inter'; ctx.fillText('Draw here', 20, 30);
                     strokes.forEach(s => {
-                        if (!s.length) return;
-                        ctx.beginPath(); ctx.strokeStyle='#2563eb'; ctx.lineWidth=2.5;
+                        if (s.length < 2) return;
+                        ctx.beginPath();
+                        ctx.strokeStyle = '#2563eb';
+                        ctx.lineCap = 'round';
+                        ctx.lineJoin = 'round';
                         ctx.moveTo(s[0].x, s[0].y);
-                        for (let i=1; i<s.length; i++) ctx.lineTo(s[i].x, s[i].y);
+                        for (let i = 1; i < s.length; i++) {
+                            const prev = s[i-1], curr = s[i];
+                            const width = ((prev.pressure || 0.5) + (curr.pressure || 0.5)) * 3;
+                            ctx.lineWidth = width;
+                            ctx.lineTo(curr.x, curr.y);
+                        }
                         ctx.stroke();
                     });
                 }
 
-                function startStroke(x,y) { drawing=true; currentStroke=[{x,y}]; strokes.push(currentStroke); }
-                function addPoint(x,y) {
-                    if (!drawing) return;
-                    const last = currentStroke[currentStroke.length-1];
-                    currentStroke.push({x,y});
-                    redrawBackground();
-                    ctx.beginPath(); ctx.strokeStyle='#2563eb'; ctx.lineWidth=2.5;
-                    ctx.moveTo(last.x,last.y); ctx.lineTo(x,y); ctx.stroke();
+                function handlePointerDown(e) {
+                    drawing = true;
+                    const r = canvas.getBoundingClientRect();
+                    const x = e.clientX - r.left, y = e.clientY - r.top;
+                    currentStroke = [{x, y, pressure: e.pressure || 0.5}];
+                    strokes.push(currentStroke);
+                    redraw();
                 }
-                function endStroke() { drawing=false; currentStroke=[]; }
+                function handlePointerMove(e) {
+                    if (!drawing) return;
+                    const r = canvas.getBoundingClientRect();
+                    const x = e.clientX - r.left, y = e.clientY - r.top;
+                    currentStroke.push({x, y, pressure: e.pressure || 0.5});
+                    redraw();
+                }
+                function handlePointerUp() { drawing = false; currentStroke = []; }
 
-                canvas.addEventListener('mousedown', e => { const r=canvas.getBoundingClientRect(); startStroke(e.clientX-r.left, e.clientY-r.top); });
-                canvas.addEventListener('mousemove', e => { if(!drawing) return; const r=canvas.getBoundingClientRect(); addPoint(e.clientX-r.left, e.clientY-r.top); });
-                canvas.addEventListener('mouseup', endStroke); canvas.addEventListener('mouseleave', endStroke);
-                canvas.addEventListener('touchstart', e => { e.preventDefault(); const r=canvas.getBoundingClientRect(); startStroke(e.touches[0].clientX-r.left, e.touches[0].clientY-r.top); });
-                canvas.addEventListener('touchmove', e => { e.preventDefault(); if(!drawing) return; const r=canvas.getBoundingClientRect(); addPoint(e.touches[0].clientX-r.left, e.touches[0].clientY-r.top); });
-                canvas.addEventListener('touchend', endStroke);
-                clearBtn.addEventListener('click', () => { strokes=[]; redrawBackground(); });
-                undoBtn.addEventListener('click', () => { if(strokes.length) strokes.pop(); redrawBackground(); });
-                redrawBackground();
+                canvas.addEventListener('pointerdown', handlePointerDown);
+                canvas.addEventListener('pointermove', handlePointerMove);
+                canvas.addEventListener('pointerup', handlePointerUp);
+                canvas.addEventListener('pointerleave', handlePointerUp);
+                canvas.addEventListener('touchstart', e => {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    const r = canvas.getBoundingClientRect();
+                    const x = touch.clientX - r.left, y = touch.clientY - r.top;
+                    drawing = true;
+                    currentStroke = [{x, y, pressure: 0.5}];
+                    strokes.push(currentStroke);
+                    redraw();
+                });
+                canvas.addEventListener('touchmove', e => {
+                    e.preventDefault();
+                    if (!drawing) return;
+                    const touch = e.touches[0];
+                    const r = canvas.getBoundingClientRect();
+                    const x = touch.clientX - r.left, y = touch.clientY - r.top;
+                    currentStroke.push({x, y, pressure: 0.5});
+                    redraw();
+                });
+                canvas.addEventListener('touchend', handlePointerUp);
+
+                clearBtn.addEventListener('click', () => { strokes = []; redraw(); });
+                undoBtn.addEventListener('click', () => { if (strokes.length) strokes.pop(); redraw(); });
+                redraw();
             }
 
             setupObstruction('viz-2d-a');
             setupSketch('viz-2d-b');
         }
 
-        // ========== 3D (animated opacity + ripple) ==========
+        /* ========== 3D SCENES (BLOOM, AUTO-ROTATE, CAMERA ZOOM) ========== */
         function init3D() {
             function createScene(containerId, type) {
                 const container = document.getElementById(containerId);
@@ -824,76 +1010,95 @@
                 scene.background = new THREE.Color(document.body.classList.contains('dark-mode') ? '#1e293b' : '#f8fafc');
                 const cam = new THREE.PerspectiveCamera(45, container.clientWidth/container.clientHeight, 0.1, 100);
                 cam.position.set(5,5,8);
-                const renderer = new THREE.WebGLRenderer({antialias: true, powerPreference: 'high-performance'});
-                renderer.setSize(container.clientWidth, container.clientHeight);
+                const renderer = new THREE.WebGLRenderer({antialias: true});
                 renderer.setPixelRatio(window.devicePixelRatio);
+                renderer.setSize(container.clientWidth, container.clientHeight);
                 container.appendChild(renderer.domElement);
                 const controls = new THREE.OrbitControls(cam, renderer.domElement);
                 controls.enableDamping = true;
+                controls.autoRotate = true;
+                controls.autoRotateSpeed = 0.3;
                 scene.add(new THREE.AmbientLight(0xffffff, 0.7));
                 const dir = new THREE.DirectionalLight(0xffffff, 0.8); dir.position.set(1,1,1); scene.add(dir);
 
+                const renderScene = new THREE.RenderPass(scene, cam);
+                const bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(container.clientWidth, container.clientHeight), 0.5, 0.4, 0.85);
+                bloomPass.threshold = 0.1;
+                bloomPass.strength = 0.8;
+                bloomPass.radius = 0.5;
+                const composer = new THREE.EffectComposer(renderer);
+                composer.addPass(renderScene);
+                composer.addPass(bloomPass);
+
                 if (type === 'site') {
                     const grid=3, sp=2;
-                    const sphereMat = new THREE.MeshStandardMaterial({color: '#0f172a', roughness: 0.3, metalness: 0.1});
+                    const sphereMat = new THREE.MeshStandardMaterial({color:'#0f172a', roughness:0.3, metalness:0.1});
                     for (let i=0;i<grid;i++) for (let j=0;j<grid;j++) {
                         const s = new THREE.Mesh(new THREE.SphereGeometry(0.4,32,32), sphereMat);
                         s.position.set((i-1)*sp, 0, (j-1)*sp); scene.add(s);
                     }
-                    const columns = [];
-                    const boxMat = new THREE.MeshStandardMaterial({color: '#2563eb', roughness: 0.15, metalness: 0.2, transparent: true, opacity:1});
+                    const boxes = [];
+                    const boxMat = new THREE.MeshStandardMaterial({color:'#2563eb', roughness:0.15, metalness:0.2, transparent:true, opacity:1});
                     for (let i=0;i<grid;i++) for (let j=0;j<grid;j++) {
-                        const group = new THREE.Group();
                         for (let y=0; y<3; y++) {
                             const box = new THREE.Mesh(new THREE.BoxGeometry(0.4,0.4,0.4), boxMat);
                             box.position.set((i-1)*sp, y*0.8+0.4, (j-1)*sp);
-                            group.add(box);
+                            scene.add(box); boxes.push(box);
                         }
-                        scene.add(group);
-                        columns.push({ group, targetOpacity:1, currentOpacity:1 });
                     }
+                    let cameraAnimId = null;
                     const btn = createDiamondBtn(container, () => {
                         const applied = btn.classList.toggle('applied');
-                        columns.forEach(col => { col.targetOpacity = applied ? 0 : 1; });
+                        boxes.forEach(b => { b.material.opacity = applied ? 0 : 1; });
                         triggerRipple(container, 16, 16);
+                        playTone(applied ? 150 : 300, 0.4, 'triangle', 0.07);
+                        const targetPos = applied ? new THREE.Vector3(3,3,5) : new THREE.Vector3(5,5,8);
+                        if (cameraAnimId) cancelAnimationFrame(cameraAnimId);
+                        const startPos = cam.position.clone();
+                        const startTime = performance.now();
+                        function animStep(now) {
+                            const elapsed = now - startTime;
+                            const t = Math.min(elapsed / 800, 1);
+                            const ease = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
+                            cam.position.lerpVectors(startPos, targetPos, ease);
+                            if (t < 1) {
+                                cameraAnimId = requestAnimationFrame(animStep);
+                            } else {
+                                cameraAnimId = null;
+                            }
+                        }
+                        cameraAnimId = requestAnimationFrame(animStep);
                     });
                 } else {
                     const geo = new THREE.TorusKnotGeometry(1.5, 0.4, 128, 16);
-                    const mat = new THREE.MeshStandardMaterial({color: '#2563eb', roughness: 0.25, metalness: 0.5});
-                    const knot = new THREE.Mesh(geo, mat);
-                    scene.add(knot);
+                    const mat = new THREE.MeshStandardMaterial({color:'#2563eb', roughness:0.25, metalness:0.5});
+                    scene.add(new THREE.Mesh(geo, mat));
                 }
 
                 function animate() {
                     const id = requestAnimationFrame(animate);
                     controls.update();
-                    if (type === 'site') {
-                        columns.forEach(col => {
-                            col.currentOpacity += (col.targetOpacity - col.currentOpacity) * 0.12;
-                            col.group.children.forEach(box => { box.material.opacity = col.currentOpacity; });
-                        });
-                    }
-                    renderer.render(scene, cam);
+                    composer.render();
                     return id;
                 }
                 const animId = animate();
-                const cleanup = () => {
+                cleanupFns.push(() => {
                     cancelAnimationFrame(animId);
                     renderer.dispose();
                     scene.traverse(o => { if (o.geometry) o.geometry.dispose(); if (o.material) o.material.dispose(); });
-                };
-                threeJSCleanups.push(cleanup);
+                });
                 window.addEventListener('resize', () => {
                     cam.aspect = container.clientWidth/container.clientHeight;
                     cam.updateProjectionMatrix();
                     renderer.setSize(container.clientWidth, container.clientHeight);
+                    composer.setSize(container.clientWidth, container.clientHeight);
                 });
             }
             createScene('viz-3d-a', 'site');
             createScene('viz-3d-b', 'torus');
         }
 
-        // ========== 4D (fog + matrix overlay) ==========
+        /* ========== 4D TESSERACT (DRONE, FOG, BLOOM) ========== */
         function init4D() {
             function createTesseract(containerId, color) {
                 const container = document.getElementById(containerId);
@@ -902,15 +1107,26 @@
                 scene.background = new THREE.Color(document.body.classList.contains('dark-mode') ? '#1e293b' : '#f8fafc');
                 const cam = new THREE.PerspectiveCamera(45, container.clientWidth/container.clientHeight, 0.1, 100);
                 cam.position.set(4,4,6);
-                const renderer = new THREE.WebGLRenderer({antialias: true, powerPreference: 'high-performance'});
-                renderer.setSize(container.clientWidth, container.clientHeight);
+                const renderer = new THREE.WebGLRenderer({antialias: true});
                 renderer.setPixelRatio(window.devicePixelRatio);
+                renderer.setSize(container.clientWidth, container.clientHeight);
                 container.appendChild(renderer.domElement);
                 const controls = new THREE.OrbitControls(cam, renderer.domElement);
                 controls.enableDamping = true;
+                controls.autoRotate = true;
+                controls.autoRotateSpeed = 0.2;
                 scene.add(new THREE.AmbientLight(0xffffff, 0.7));
                 const dir = new THREE.DirectionalLight(0xffffff, 0.8); dir.position.set(1,1,1); scene.add(dir);
                 scene.fog = new THREE.Fog(0xf8fafc, 5, 12);
+
+                const renderScene = new THREE.RenderPass(scene, cam);
+                const bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(container.clientWidth, container.clientHeight), 0.5, 0.4, 0.85);
+                bloomPass.threshold = 0.1;
+                bloomPass.strength = 0.6;
+                bloomPass.radius = 0.5;
+                const composer = new THREE.EffectComposer(renderer);
+                composer.addPass(renderScene);
+                composer.addPass(bloomPass);
 
                 const verts4D = [];
                 for (let i=0;i<16;i++) {
@@ -920,7 +1136,7 @@
                 const edges = [];
                 for (let i=0;i<16;i++) for (let j=i+1;j<16;j++) {
                     const diff = [0,1,2,3].filter(k => verts4D[i].getComponent(k) !== verts4D[j].getComponent(k));
-                    if (diff.length === 1) edges.push([i,j]);
+                    if (diff.length===1) edges.push([i,j]);
                 }
                 const edgeGeo = new THREE.BufferGeometry();
                 const pos = new Float32Array(edges.length*2*3);
@@ -928,8 +1144,9 @@
                 const lines = new THREE.LineSegments(edgeGeo, new THREE.LineBasicMaterial({color: color||'#2563eb'}));
                 scene.add(lines);
                 const dotGeo = new THREE.SphereGeometry(0.08, 8, 8);
-                const dotMat = new THREE.MeshStandardMaterial({color: color||'#2563eb', roughness: 0.3});
-                const dots = verts4D.map(() => { const dot = new THREE.Mesh(dotGeo, dotMat); scene.add(dot); return dot; });
+                const dotMat = new THREE.MeshStandardMaterial({color: color||'#2563eb', roughness:0.3});
+                const dots = [];
+                verts4D.forEach(v => { const dot = new THREE.Mesh(dotGeo, dotMat); scene.add(dot); dots.push(dot); });
 
                 const matrixOverlay = document.createElement('div');
                 matrixOverlay.style.position = 'absolute'; matrixOverlay.style.top = '10px'; matrixOverlay.style.right = '10px';
@@ -939,12 +1156,29 @@
                 matrixOverlay.style.borderRadius = '6px';
                 container.appendChild(matrixOverlay);
 
-                function project4D(v, angle) {
-                    const cos = Math.cos(angle), sin = Math.sin(angle);
+                let droneOsc = null, droneGain = null;
+                function startDrone() {
+                    if (!audioCtx || droneOsc) return;
+                    droneOsc = audioCtx.createOscillator();
+                    droneGain = audioCtx.createGain();
+                    droneOsc.type = 'sine';
+                    droneOsc.frequency.value = 220;
+                    droneGain.gain.value = 0.02;
+                    droneOsc.connect(droneGain);
+                    droneGain.connect(audioCtx.destination);
+                    droneOsc.start();
+                }
+                function stopDrone() {
+                    if (droneOsc) { try { droneOsc.stop(); } catch(e){} droneOsc = null; droneGain = null; }
+                }
+
+                function project(v, angle) {
+                    const cos=Math.cos(angle), sin=Math.sin(angle);
                     const y = v.y*cos - v.w*sin, w = v.y*sin + v.w*cos;
                     const scale = 1/(3+w);
                     return new THREE.Vector3(v.x*scale, y*scale, v.z*scale);
                 }
+
                 let angle = 0;
                 function animate() {
                     const id = requestAnimationFrame(animate);
@@ -952,40 +1186,54 @@
                     const arr = lines.geometry.attributes.position.array;
                     let idx=0;
                     edges.forEach(([i,j]) => {
-                        const p1 = project4D(verts4D[i], angle), p2 = project4D(verts4D[j], angle);
+                        const p1 = project(verts4D[i], angle), p2 = project(verts4D[j], angle);
                         arr[idx]=p1.x; arr[idx+1]=p1.y; arr[idx+2]=p1.z;
                         arr[idx+3]=p2.x; arr[idx+4]=p2.y; arr[idx+5]=p2.z;
                         idx+=6;
                     });
                     lines.geometry.attributes.position.needsUpdate = true;
-                    dots.forEach((dot, i) => { dot.position.copy(project4D(verts4D[i], angle)); });
-                    const cos = Math.cos(angle), sin = Math.sin(angle);
+                    dots.forEach((dot, i) => dot.position.copy(project(verts4D[i], angle)));
                     matrixOverlay.innerHTML = `Rot(θ) = [cosθ sinθ; -sinθ cosθ]<br>θ = ${angle.toFixed(2)} rad`;
+                    if (droneOsc && audioCtx) {
+                        droneOsc.frequency.setValueAtTime(220 + 55 * Math.sin(angle * 2), audioCtx.currentTime);
+                    }
                     controls.update();
-                    renderer.render(scene, cam);
+                    composer.render();
                     return id;
                 }
                 const animId = animate();
-                const cleanup = () => {
+
+                const observer = new IntersectionObserver(entries => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) { initAudio(); startDrone(); }
+                        else stopDrone();
+                    });
+                }, { threshold: 0.1 });
+                observer.observe(container);
+
+                cleanupFns.push(() => {
                     cancelAnimationFrame(animId);
+                    stopDrone();
+                    observer.disconnect();
                     renderer.dispose();
                     scene.traverse(o => { if (o.geometry) o.geometry.dispose(); if (o.material) o.material.dispose(); });
-                };
-                threeJSCleanups.push(cleanup);
+                });
                 window.addEventListener('resize', () => {
                     cam.aspect = container.clientWidth/container.clientHeight;
                     cam.updateProjectionMatrix();
                     renderer.setSize(container.clientWidth, container.clientHeight);
+                    composer.setSize(container.clientWidth, container.clientHeight);
                 });
             }
             createTesseract('viz-4d-a', '#2563eb');
             createTesseract('viz-4d-b', '#dc2626');
         }
 
-        // ---- Initial load ----
+        /* ========== START ========== */
         init1D();
     })();
     </script>
 </body>
 </html>
+
 
