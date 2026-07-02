@@ -44,7 +44,6 @@ def fetch_arxiv(q=AUTHOR, max_results=10):
     for entry in root.findall('atom:entry', ns):
         title = (entry.find('atom:title', ns).text or '').strip()
         id_url = entry.find('atom:id', ns).text
-        # arXiv id in id_url
         entries.append({'title': title, 'url': id_url})
     return entries
 
