@@ -1,81 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Joey Woo — research in category theory and quantum foundations; papers, preprints, and contact information." />
-  <meta name="google-site-verification" content="-gu3NFsRhLgN4wervJXu0iI68wFNmFRY9myqKUGmu70" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Joey Woo — category theory, quantum foundations, and interactive concept models. Papers, preprints, and playful precision.">
+  <meta name="google-site-verification" content="-gu3NFsRhLgN4wervJXu0iI68wFNmFRY9myqKUGmu70">
   <title>Joey Woo · Mathematics</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="canonical" href="https://s202101185-cell.github.io/" />
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="canonical" href="https://s202101185-cell.github.io/">
 </head>
 <body>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="research.html">Research</a>
-    <a href="publications.html">Publications</a>
-    <a href="about.html">About</a>
-    <a href="contact.html">Contact</a>
-  </nav>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html" aria-label="Home — Joey Woo">
+        <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="24" cy="24" r="22"/></g></svg>
+        <span class="brand-name">Joey Woo</span>
+      </a>
 
-  <header class="hero">
-    <div class="hero-content fade-in">
-      <div class="hero-text">
-        <h1>Joey Woo</h1>
-        <p>Exploring the geometry of logic, the logic of geometry, and the quantum spaces between them.</p>
-      </div>
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="research.html">Research</a>
+        <a href="publications.html">Publications</a>
+        <a href="about.html">About</a>
+        <a href="contact.html" class="cta">Contact</a>
+      </nav>
     </div>
   </header>
 
-  <main class="container fade-in">
-    <section class="lead card" data-enhance="true" data-expand="true">
-      <h2>Overview</h2>
-      <p>
-        I work at the intersection of higher topos theory and quantum foundations. My research
-        builds concrete models of cohesive ∞‑topoi equipped with quantum modalities — making
-        Schreiber’s programme explicit in finite‑dimensional settings and connecting category‑theoretic
-        formalisms to quantum information structures.
-      </p>
+  <main>
+    <section class="hero-outer" aria-labelledby="hero-heading">
+      <div class="hero">
+        <div class="hero-left">
+          <p class="eyebrow">Mathematics • Categories • Quantum Ideas</p>
+          <h1 id="hero-heading">Cohesion, modality, and the curious geometry of logic</h1>
+          <p class="subtitle">I build concrete environments where classical and quantum intuitions meet — and I try to make the meeting polite.</p>
+
+          <div class="hero-actions">
+            <a class="btn primary" href="publications.html">Recent papers</a>
+            <a class="btn ghost" href="research.html">Research overview</a>
+          </div>
+
+          <p class="witty">Witty margin note: compiled with strong tea, weak coffee, and an occasional category-theoretic pun.</p>
+        </div>
+
+        <aside class="hero-card" aria-hidden="false">
+          <div class="hero-card-inner">
+            <div class="hero-accent" aria-hidden="true"></div>
+            <h3 class="card-title">Featured preprint</h3>
+            <h4 class="paper-title">A Cohesive ∞‑Topos with a Quantum Modality from Finite‑Dimensional C*-Algebras</h4>
+            <p class="paper-meta"><a href="https://arxiv.org/abs/2606.02269" target="_blank" rel="noopener">arXiv:2606.02269</a> · 2026</p>
+            <div class="card-actions">
+              <a class="btn tiny" href="https://arxiv.org/abs/2606.02269" target="_blank" rel="noopener">View on arXiv</a>
+              <button class="btn tiny outline model-btn" data-model="quantum-geometry">View model</button>
+            </div>
+            <p class="card-fineprint">Tip: click “View model” to explore the conceptual map — drag nodes to rearrange ideas.</p>
+          </div>
+
+          <svg class="flourish" viewBox="0 0 200 60" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0,48 C40,10 110,10 200,48" fill="none" stroke="rgba(2,6,23,0.06)" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </aside>
+      </div>
+
+      <div class="hero-note">
+        <svg class="tiny-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v6" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+        <div>
+          <strong>Interactive models</strong> — concept maps are embedded throughout. The site learns your taste locally (consent required).
+        </div>
+      </div>
     </section>
 
-    <section id="recent" class="card" data-enhance="true" data-model="quantum-geometry">
-      <h2>Recent Preprints & Highlights</h2>
-      <div class="card small">
-        <h3>A Cohesive ∞‑Topos with a Quantum Modality from Finite‑Dimensional C*-Algebras</h3>
-        <p>Constructs a concrete model of Schreiber’s programme and analyses the centre comonad.</p>
-        <p><a href="https://arxiv.org/abs/2606.02269" target="_blank" rel="noopener">arXiv:2606.02269</a></p>
-      </div>
-      <div class="card small">
-        <h3>Diagnosis and the Precomposition Obstruction</h3>
-        <p>General obstruction theorem for coreflective quantum modalities and classification of quantum sites.</p>
-        <p><a href="https://arxiv.org/abs/2606.09467" target="_blank" rel="noopener">arXiv:2606.09467</a></p>
-      </div>
-      <p style="margin-top:0.5rem;font-size:0.95rem;color:#64748b;">
-        Tip: Click "View model" on this card to open an interactive concept map of the ideas.
-      </p>
-    </section>
+    <section class="container features" aria-label="Quick links and highlights">
+      <div class="grid">
+        <article class="feature card" data-enhance="true" data-model="research-timeline">
+          <h3>Research snapshot</h3>
+          <p>Constructive models of cohesion and quantum modality; obstructions, resolutions, and computational examples.</p>
+          <p class="feature-foot">If you like dense arguments, try the model — it will be gentle.</p>
+          <p><button class="btn outline model-btn" data-model="research-timeline">Open model</button></p>
+        </article>
 
-    <section class="card" data-enhance="true">
-      <h2>About the Work</h2>
-      <p>
-        My approach blends explicit algebraic constructions with higher categorical semantics,
-        making abstract cohesion and quantum modality ideas concrete and computable. The interactive
-        models on this site illustrate these relationships and let you explore the structure visually.
-      </p>
+        <article class="feature card" data-enhance="true">
+          <h3>Publications</h3>
+          <p>Preprints and (eventually) journal versions; DOIs and arXiv links are surfaced automatically.</p>
+          <p class="feature-foot">Witty aside: paper titles are longer than the abstracts — which says something.</p>
+          <p><a class="btn ghost" href="publications.html">Browse papers</a></p>
+        </article>
+
+        <article class="feature card" data-enhance="true">
+          <h3>Collaborate</h3>
+          <p>Short-term consults, joint problems, or long proofs.—I prefer clarity to cleverness, mostly.</p>
+          <p class="feature-foot">Pro tip: mention which axiom you dislike in the first line.</p>
+          <p><a class="btn ghost" href="contact.html">Get in touch</a></p>
+        </article>
+
+        <article class="feature card" data-enhance="true">
+          <h3>About</h3>
+          <p>Independent researcher based in Hong Kong. I keep a small, focused set of projects and prefer good diagrams to bad jokes.</p>
+          <p class="feature-foot">Minor joke: I reject the Axiom of Bad Coffee.</p>
+          <p><a class="btn ghost" href="about.html">Read more</a></p>
+        </article>
+      </div>
     </section>
   </main>
 
-  <footer>
-    <p>© 2026 Joey Woo · <a href="mailto:s202101185@student.cky.edu.hk">Email</a> ·
-      <a href="https://orcid.org/0009-0008-8888-9495" target="_blank" rel="noopener">ORCID</a> ·
-      <a href="https://mathoverflow.net/users/592118/joey-woo" target="_blank" rel="noopener">MathOverflow</a>
-    </p>
-    <p class="muted">Compiled with black tea, a healthy disrespect for the Axiom of Choice, and just enough sleep to remain continuous.</p>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p class="copyright">© 2026 Joey Woo · <a href="mailto:s202101185@student.cky.edu.hk">Email</a> · <a href="https://orcid.org/0009-0008-8888-9495" target="_blank" rel="noopener">ORCID</a></p>
+      <p class="footer-witty">Compiled with black tea, a healthy disrespect for the Axiom of Choice, and just enough sleep to remain continuous.</p>
+    </div>
   </footer>
 
+  <!-- personalization & interactive models (local-only) -->
   <script src="assets/js/ai-personalizer-full.js" defer></script>
+
+  <!-- small inline script to ensure model buttons created early still work -->
+  <script>
+    (function(){
+      // When model buttons (class model-btn) are clicked, the ai script will hook model opening.
+      // This no-op is here as a compatibility hook if ai script exposes window.__aiLocal.openModel.
+      document.addEventListener('click', function(e){
+        const b = e.target.closest('.model-btn');
+        if (!b) return;
+        const model = b.dataset.model;
+        if (window.__aiLocal && typeof window.__aiLocal.openModelModal === 'function') {
+          window.__aiLocal.openModelModal(model);
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
