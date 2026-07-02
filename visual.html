@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Interactive visualizations of Joey Woo's research: cohesive ∞-topoi, quantum modalities, and the precomposition obstruction." />
+    <title>Visualizations · Joey Woo</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .viz-container {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            margin: 2rem 0;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .viz-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .viz-tab {
+            padding: 0.5rem 1.2rem;
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+        .viz-tab.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="research.html">Research</a>
+        <a href="publications.html">Publications</a>
+        <a href="visual.html">Visuals</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content fade-in">
+            <div class="hero-text">
+                <h1>Visual Explorations</h1>
+                <p>Geometric intuition for cohesive ∞‑topoi, quantum modalities, and the obstruction theorem.</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="container fade-in">
+        <div class="viz-tabs">
+            <button class="viz-tab active" data-view="1d">1D</button>
+            <button class="viz-tab" data-view="2d">2D</button>
+            <button class="viz-tab" data-view="3d">3D</button>
+            <button class="viz-tab" data-view="4d">4D</button>
+        </div>
+
+        <div class="viz-container" id="viz-container-1d">
+            <canvas id="canvas-1d"></canvas>
+        </div>
+        <div class="viz-container" id="viz-container-2d" style="display:none;">
+            <canvas id="canvas-2d"></canvas>
+        </div>
+        <div class="viz-container" id="viz-container-3d" style="display:none;">
+            <canvas id="canvas-3d"></canvas>
+        </div>
+        <div class="viz-container" id="viz-container-4d" style="display:none;">
+            <canvas id="canvas-4d"></canvas>
+        </div>
+
+        <div class="explain-content">
+            <p><strong>1D – Gelfand spectrum collapse.</strong> Points on the line represent characters of a commutative C*-algebra; under the centre comonad, the spectrum collapses to a single point (the trivial character).</p>
+            <p><strong>2D – Precomposition obstruction.</strong> The diagram illustrates how the diagonal map Δ fails to commute with Day convolution, collapsing the multiplicative conjunction to the cartesian product.</p>
+            <p><strong>3D – Quantum site.</strong> The grid of spheres represents geometric manifolds; vertical columns are algebraic Hilbert spaces. Click <em>Apply Q</em> to see the quantum modality project onto the commutative core.</p>
+            <p><strong>4D – Distributive law coherence.</strong> A rotating tesseract encodes the mixed distributive law. Coloured edges trace the entwining map ψ : g ⊗ δₓ → δ_{gxg⁻¹} ⊗ g.</p>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2026 Joey Woo · <a href="mailto:s202101185@student.cky.edu.hk">Email</a></p>
+        <p style="font-style: italic; color: #64748b; margin-top: 0.5rem;">
+            Every diagram is a sheaf of intuition. You are a global section of it.
+        </p>
+    </footer>
+
+    <!-- Three.js import map -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.126.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.126.0/examples/jsm/"
+            }
+        }
+    </script>
+    <script src="assets/js/ai-enhancer.js" defer></script>
+    <script type="module">
+        // Tab switching
+        const tabs = document.querySelectorAll('.viz-tab');
+        const containers = {
+            '1d': document.getElementById('viz-container-1d'),
+            '2d': document.getElementById('viz-container-2d'),
+            '3d': document.getElementById('viz-container-3d'),
+            '4d': document.getElementById('viz-container-4d')
+        };
+        let activeView = '1d';
+        let threeScene, threeRenderer, threeCamera, controls, animateId;
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const view = tab.dataset.view;
+                if (view === activeView) return;
+                // hide all
+                Object.values(containers).forEach(c => c.style.display = 'none');
+                containers[view].style.display = 'block';
+                // stop any running animation
+                if (animateId) cancelAnimationFrame(animateId);
+                // initialize the selected view
+                switch(view) {
+                    case '1d': init1D(); break;
+                    case '2d': init2D(); break;
+                    case '3d': init3D(); break;
+                    case '4d': init4D(); break;
+                }
+                activeView = view;
+            });
+        });
+
+        // ------- 1D: Spectrum line -------
+        function init1D() {
+            const canvas = document.getElementById('canvas-1d');
+            const ctx = canvas.getContext('2d');
+            let width = canvas.parentElement.clientWidth;
+            let height = canvas.parentElement.clientHeight;
+            canvas.width = width;
+            canvas.height = height;
+            let collapsed = false;
+            const toggleBtn = document.createElement('button');
+            toggleBtn.textContent = 'Collapse (apply Q)';
+            toggleBtn.style.position = 'absolute';
+            toggleBtn.style.bottom = '10px';
+            toggleBtn.style.left = '10px';
+            toggleBtn.style.zIndex = '10';
+            toggleBtn.className = 'viz-tab';
+            canvas.parentElement.appendChild(toggleBtn);
+            toggleBtn.addEventListener('click', () => { collapsed = !collapsed; draw(); });
+            function draw() {
+                ctx.clearRect(0, 0, width, height);
+                ctx.fillStyle = '#0f172a';
+                ctx.font = '14px Inter, sans-serif';
+                ctx.fillText('Spectrum of commutative C*-algebra', 20, 30);
+                const lineY = height/2;
+                ctx.beginPath();
+                ctx.moveTo(40, lineY);
+                ctx.lineTo(width-40, lineY);
+                ctx.strokeStyle = '#94a3b8';
+                ctx.stroke();
+                const numPoints = 5;
+                const spacing = (width-80)/(numPoints-1);
+                for(let i=0; i<numPoints; i++){
+                    let x = 40 + i*spacing;
+                    if(collapsed) x = width/2; // all collapse to middle
+                    ctx.beginPath();
+                    ctx.arc(x, lineY, 6, 0, 2*Math.PI);
+                    ctx.fillStyle = i===2 ? '#2563eb' : '#64748b';
+                    ctx.fill();
+                }
+                if(collapsed){
+                    ctx.fillStyle = '#dc2626';
+                    ctx.font = 'italic 12px Inter';
+                    ctx.fillText('Classical core = single point', width/2+15, lineY-15);
+                }
+            }
+            draw();
+            // resize handler
+            window.addEventListener('resize', () => {
+                width = canvas.parentElement.clientWidth;
+                height = canvas.parentElement.clientHeight;
+                canvas.width = width;
+                canvas.height = height;
+                draw();
+            });
+        }
+
+        // ------- 2D: Obstruction diagram -------
+        function init2D() {
+            const canvas = document.getElementById('canvas-2d');
+            const ctx = canvas.getContext('2d');
+            let width = canvas.parentElement.clientWidth;
+            let height = canvas.parentElement.clientHeight;
+            canvas.width = width;
+            canvas.height = height;
+            function draw() {
+                ctx.clearRect(0,0,width,height);
+                ctx.fillStyle = '#0f172a';
+                ctx.font = '14px Inter, sans-serif';
+                ctx.fillText('Precomposition Obstruction', 20, 30);
+                // nodes
+                const nodes = [
+                    {x: width/4, y: height/3, label: 'Δ'},
+                    {x: 3*width/4, y: height/3, label: 'Q(X×Y)'},
+                    {x: width/4, y: 2*height/3, label: 'QX ⊗ QY'},
+                    {x: 3*width/4, y: 2*height/3, label: 'X×Y'}
+                ];
+                nodes.forEach(n => {
+                    ctx.beginPath();
+                    ctx.arc(n.x, n.y, 8, 0, 2*Math.PI);
+                    ctx.fillStyle = '#2563eb';
+                    ctx.fill();
+                    ctx.fillStyle = '#fff';
+                    ctx.font = 'bold 12px Inter';
+                    ctx.fillText(n.label, n.x-15, n.y-15);
+                });
+                // arrows
+                ctx.strokeStyle = '#94a3b8';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(nodes[0].x, nodes[0].y);
+                ctx.lineTo(nodes[1].x, nodes[1].y);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(nodes[0].x, nodes[0].y);
+                ctx.lineTo(nodes[2].x, nodes[2].y);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(nodes[2].x, nodes[2].y);
+                ctx.lineTo(nodes[3].x, nodes[3].y);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(nodes[1].x, nodes[1].y);
+                ctx.lineTo(nodes[3].x, nodes[3].y);
+                ctx.stroke();
+                // collapse annotation
+                ctx.fillStyle = '#dc2626';
+                ctx.font = 'italic 12px Inter';
+                ctx.fillText('Day convolution collapses to cartesian product', width/2-80, height-20);
+            }
+            draw();
+            window.addEventListener('resize', () => {
+                width = canvas.parentElement.clientWidth;
+                height = canvas.parentElement.clientHeight;
+                canvas.width = width;
+                canvas.height = height;
+                draw();
+            });
+        }
+
+        // ------- 3D: Quantum site -------
+        function init3D() {
+            const container = document.getElementById('viz-container-3d');
+            const canvas = document.getElementById('canvas-3d');
+            // Setup Three.js
+            threeScene = new THREE.Scene();
+            threeScene.background = new THREE.Color('#f8fafc');
+            threeCamera = new THREE.PerspectiveCamera(45, container.clientWidth/container.clientHeight, 0.1, 100);
+            threeCamera.position.set(5,5,10);
+            threeRenderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true});
+            threeRenderer.setSize(container.clientWidth, container.clientHeight);
+            
+            // lights
+            threeScene.add(new THREE.AmbientLight(0xffffff, 0.6));
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            dirLight.position.set(1,1,1);
+            threeScene.add(dirLight);
+
+            // Create a grid of spheres (manifolds) and columns (Hilbert spaces)
+            const gridSize = 3;
+            const spacing = 2;
+            const spheres = [];
+            const columns = []; // groups of vertical cubes
+            const modalityApplied = { value: false };
+
+            function createColumn(x,z) {
+                const group = new THREE.Group();
+                const material = new THREE.MeshStandardMaterial({color: '#2563eb', roughness: 0.3});
+                for(let y=0; y<3; y++){
+                    const box = new THREE.Mesh(new THREE.BoxGeometry(0.4,0.4,0.4), material);
+                    box.position.set(x, y*0.8 + 0.4, z);
+                    group.add(box);
+                }
+                return group;
+            }
+
+            // Manifold spheres
+            for(let i=0; i<gridSize; i++){
+                for(let j=0; j<gridSize; j++){
+                    const x = (i-1)*spacing;
+                    const z = (j-1)*spacing;
+                    const sphere = new THREE.Mesh(
+                        new THREE.SphereGeometry(0.3, 16, 16),
+                        new THREE.MeshStandardMaterial({color: '#0f172a', roughness: 0.5})
+                    );
+                    sphere.position.set(x, 0, z);
+                    threeScene.add(sphere);
+                    spheres.push(sphere);
+                    const column = createColumn(x, z);
+                    threeScene.add(column);
+                    columns.push({group: column, originalY: column.children.map(c => c.position.y)});
+                }
+            }
+
+            // Orbit controls
+            controls = new THREE.OrbitControls(threeCamera, threeRenderer.domElement);
+            controls.enableDamping = true;
+
+            // Button to toggle modality Q
+            const btn = document.createElement('button');
+            btn.textContent = 'Apply Q (collapse)';
+            btn.style.position = 'absolute';
+            btn.style.bottom = '10px';
+            btn.style.left = '10px';
+            btn.style.zIndex = '10';
+            btn.className = 'viz-tab';
+            container.appendChild(btn);
+            btn.addEventListener('click', () => {
+                modalityApplied.value = !modalityApplied.value;
+                columns.forEach(col => {
+                    const targetY = modalityApplied.value ? 0 : col.originalY;
+                    col.group.children.forEach((box, idx) => {
+                        box.position.y = targetY[idx];
+                    });
+                });
+            });
+
+            function animate3D() {
+                animateId = requestAnimationFrame(animate3D);
+                controls.update();
+                threeRenderer.render(threeScene, threeCamera);
+            }
+            animate3D();
+
+            window.addEventListener('resize', () => {
+                threeCamera.aspect = container.clientWidth/container.clientHeight;
+                threeCamera.updateProjectionMatrix();
+                threeRenderer.setSize(container.clientWidth, container.clientHeight);
+            });
+        }
+
+        // ------- 4D: Tesseract projection -------
+        function init4D() {
+            const container = document.getElementById('viz-container-4d');
+            const canvas = document.getElementById('canvas-4d');
+            // We'll use a 4D hypercube (tesseract) rotating in 4D and project to 3D then 2D
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color('#f8fafc');
+            const camera = new THREE.PerspectiveCamera(45, container.clientWidth/container.clientHeight, 0.1, 100);
+            camera.position.set(4,4,8);
+            const renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true});
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            
+            scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            dirLight.position.set(1,1,1);
+            scene.add(dirLight);
+
+            // Tesseract vertices (16 points) in 4D coordinates (±1,±1,±1,±1)
+            const vertices4D = [];
+            for(let i=0; i<16; i++){
+                const bits = [(i>>3)&1, (i>>2)&1, (i>>1)&1, i&1].map(b => b*2-1);
+                vertices4D.push(new THREE.Vector4(bits[0], bits[1], bits[2], bits[3]));
+            }
+            // Edges: connect if differ in exactly one coordinate
+            const edges = [];
+            for(let i=0; i<16; i++){
+                for(let j=i+1; j<16; j++){
+                    const diff = [0,1,2,3].filter(k => vertices4D[i].getComponent(k) !== vertices4D[j].getComponent(k));
+                    if(diff.length === 1) edges.push([i,j]);
+                }
+            }
+
+            // Create a line material
+            const lineMat = new THREE.LineBasicMaterial({color: '#2563eb'});
+            const points = []; // will be updated
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(edges.length * 2 * 3);
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            const lines = new THREE.LineSegments(geometry, lineMat);
+            scene.add(lines);
+
+            // Project from 4D to 3D with a rotation in the 4th dimension
+            function project4D(v4, angle) {
+                // rotate in yw plane
+                const y = v4.y;
+                const w = v4.w;
+                const cos = Math.cos(angle);
+                const sin = Math.sin(angle);
+                const ny = y * cos - w * sin;
+                const nw = y * sin + w * cos;
+                // perspective divide along w (simplified)
+                const scale = 1 / (3 + nw);
+                return new THREE.Vector3(v4.x * scale, ny * scale, v4.z * scale);
+            }
+
+            let angle = 0;
+            function animate4D() {
+                animateId = requestAnimationFrame(animate4D);
+                angle += 0.01;
+                const posArray = lines.geometry.attributes.position.array;
+                let idx = 0;
+                edges.forEach(([i,j]) => {
+                    const p1 = project4D(vertices4D[i], angle);
+                    const p2 = project4D(vertices4D[j], angle);
+                    posArray[idx++] = p1.x; posArray[idx++] = p1.y; posArray[idx++] = p1.z;
+                    posArray[idx++] = p2.x; posArray[idx++] = p2.y; posArray[idx++] = p2.z;
+                });
+                lines.geometry.attributes.position.needsUpdate = true;
+                lines.rotation.y += 0.005;
+                renderer.render(scene, camera);
+            }
+            animate4D();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth/container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+        }
+
+        // Initialize the default view (1D) on page load
+        init1D();
+    </script>
+</body>
+</html>
